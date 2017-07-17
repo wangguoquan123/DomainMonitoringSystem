@@ -7,11 +7,13 @@ import routes from '@/router/index.js';
 import VueI18n from 'vue-i18n';
 import i18ns from './lib/i18n.js';
 import iView from 'iview';
+import verify from 'vue-verify-plugin/src/verify';
 import 'iview/dist/styles/iview.css';
 
 Vue.use(VueRouter);
 Vue.use(VueI18n);
 Vue.use(iView);
+Vue.use(verify);
 
 const router = new VueRouter({
     routes

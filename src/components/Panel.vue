@@ -1,10 +1,30 @@
 <template>
     <div class="panel">
-        11111111
+        <domain-header></domain-header>
+        <domain-sidebar></domain-sidebar>
     </div>
 </template>
 
 <script>
+
+    import DomainHeader from '@/components/common/DomainHeader';
+    import DomainSidebar from '@/components/common/DomainSidebar';
+
+    export default {
+        data() {
+            return {
+
+            }
+        },
+        components: {
+            DomainHeader,
+            DomainSidebar
+        },
+        props: [],
+        methods: {
+
+        }
+    }
 
 </script>
 
