@@ -55,9 +55,9 @@
                                         <i class="fa fa-hand-peace-o"></i>
                                         33333
                                     </li>
-                                    <li class="user-item">
+                                    <li class="user-item" @click="loginOut">
                                         <i class="fa fa-hand-peace-o"></i>
-                                        444444
+                                        登出
                                     </li>
                                 </ul>
                             </li>
@@ -78,7 +78,24 @@
         },
         props: [],
         methods: {
+            loginOut() {
+                let _that = this;
+                _that.$confirm('确定要退出登录?', '提示', {
+                    confirmButtonText: '确定',
+                    cancelButtonText: '取消',
+                    type: 'warning'
+                }).then(() => {
+                    _that.$message({
+                        type: 'success',
+                        message: '退出成功!'
+                    });
+                    setTimeout(function() {
+                        _that.$router.push('/');
+                    }, 2000);
+                }).catch(() => {
 
+                });
+            }
         }
     }
 </script>
