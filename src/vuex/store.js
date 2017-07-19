@@ -6,18 +6,22 @@ Vue.use(Vuex);
 export default new Vuex.Store({
     state: {
         activeId: '',
-        domainBar: {
+        domainText: {
             one: '',
             two: ''
-        }
+        },
+        navStatus: true
     },
     mutations: {
         menuActive(state, active) {
             state.activeId = active;
         },
         domainBarActive(state, active) {
-            state.domainBar.one = active.one;
-            state.domainBar.two = active.two;
+            state.domainText.one = active.one;
+            state.domainText.two = active.two;
+        },
+        navToggleActive(state, active) {
+            state.navStatus = active;
         }
     }
 })

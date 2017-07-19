@@ -146,7 +146,7 @@
         props: [],
         methods: {
             homeUrl() {
-                store.commit('menuActive', '1-1');
+                this.$store.commit('menuActive', '1-1');
                 this.$router.push('/panel/show');
             }
         }

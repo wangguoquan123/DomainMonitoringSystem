@@ -1,7 +1,7 @@
 <template>
     <div class="domain-header">
-        <Row>
-            <Col span="24">
+        <el-row>
+            <el-col :span="24">
                 <div class="header-main">
                     {{ $t('Hebei key domain name monitoring system') }}
                     <div class="header-ext">
@@ -64,8 +64,8 @@
                         </ul>
                     </div>
                 </div>
-            </Col>
-        </Row>
+            </el-col>
+        </el-row>
     </div>
 </template>
 
@@ -101,7 +101,6 @@
                 border-left: 1px solid #1283c9;
                 border-right: 1px solid #5eb6ee;
                 display: inline-block;
-                width: 2px;
                 height: 100%;
                 float: left;
             }
@@ -121,6 +120,7 @@
                     width: 140px;
                     background-color: #219cea;
                     border-radius: 0 0 6px 6px;
+                    z-index: 99;
                     .user-item {
                         padding: 0 10px;
                         border-top: 1px solid #eae9e9;
@@ -160,14 +160,13 @@
                     }
                 }
                 img {
-                    height: 100%;
+                    height: 74%;
                     border-radius: 50%;
                     padding: 6px;
                 }
             }
             .item.message {
                 position: relative;
-                margin-right: 20px;
                 & > i {
                     margin-top: 5px;
                     font-size: 32px;
@@ -176,7 +175,7 @@
                     width: 31px;
                     height: 18px;
                     position: absolute;
-                    right: -16px;
+                    right: 5px;
                     top: 4px;
                     background-color: red;
                     border-radius: 10px;

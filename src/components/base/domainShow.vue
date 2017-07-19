@@ -1,6 +1,6 @@
 <template>
     <div class="domain-show">
-        展示
+        1111
     </div>
 </template>
 
@@ -18,4 +18,8 @@
     }
 </script>
 
-<style lang="scss"></style>
+<style lang="scss">
+    .domain-show {
+        padding: 30px;
+    }
+</style>

@@ -2,9 +2,9 @@
     <div class="domain-bar">
         首页
         <span class="bar-border">/</span>
-        {{ levelText.one }}
+        {{ text.one ? text.one : levelText.one }}
         <span class="bar-border">/</span>
-        {{ levelText.two }}
+        {{ text.two ? text.two : levelText.two }}
     </div>
 </template>
 
@@ -22,10 +22,12 @@
         methods: {
 
         },
+        mounted() {
+
+        },
         computed: {
-            levelText() {
-                console.log(this.$store.state.domainBar);
-                return this.$store.state.domainBar;
+            text() {
+                return this.$store.state.domainText;
             }
         }
     }
@@ -33,7 +35,6 @@
 
 <style lang="scss">
     .domain-bar {
-        margin-left: 240px;
         line-height: 50px;
         font-size: 14px;
         color: #868585;
