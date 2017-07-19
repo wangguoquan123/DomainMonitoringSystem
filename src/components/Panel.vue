@@ -2,6 +2,8 @@
     <div class="panel">
         <domain-header></domain-header>
         <domain-sidebar></domain-sidebar>
+        <domain-bar></domain-bar>
+        <router-view></router-view>
     </div>
 </template>
 
@@ -9,6 +11,7 @@
 
     import DomainHeader from '@/components/common/DomainHeader';
     import DomainSidebar from '@/components/common/DomainSidebar';
+    import DomainBar from '@/components/common/DomainBar';
 
     export default {
         data() {
@@ -18,7 +21,8 @@
         },
         components: {
             DomainHeader,
-            DomainSidebar
+            DomainSidebar,
+            DomainBar
         },
         props: [],
         methods: {

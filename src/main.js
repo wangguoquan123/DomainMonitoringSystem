@@ -1,14 +1,16 @@
 // The Vue build version to load with the `import` command
 // (runtime-only or standalone) has been set in webpack.base.conf with an alias.
 import Vue from 'vue'
-import App from './App'
+import App from '@/App'
 import VueRouter from 'vue-router';
 import routes from '@/router/index.js';
 import VueI18n from 'vue-i18n';
-import i18ns from './lib/i18n.js';
+import i18ns from '@/lib/i18n.js';
+import menuId from '@/lib/menuId.js';
 import iView from 'iview';
 import verify from 'vue-verify-plugin/src/verify';
 import 'iview/dist/styles/iview.css';
+import store from '@/vuex/store.js'
 
 Vue.use(VueRouter);
 Vue.use(VueI18n);
@@ -20,6 +22,7 @@ const router = new VueRouter({
 });
 
 router.beforeEach((to, from, next) => {
+    store.commit('menuActive', menuId[to.fullPath]);
     iView.LoadingBar.start();
     next();
 });
@@ -27,6 +30,11 @@ router.beforeEach((to, from, next) => {
 router.afterEach((to, from, next) => {
     iView.LoadingBar.finish();
 });
+
+// 路由跳转
+Vue.prototype.$goRoute = function (index) {
+    this.$router.push(index)
+};
 
 iView.LoadingBar.config({
     color: '#5cb85c',
@@ -50,6 +58,8 @@ new Vue({
   el: '#app',
   router,
   i18n,
+  store,
+  menuId,
   template: '<App/>',
   components: { App }
 });
