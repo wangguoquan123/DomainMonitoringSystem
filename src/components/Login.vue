@@ -116,8 +116,12 @@
                             }));
                         }
                         _that.$Message.success(_that.$t('Login successful'));
+//                        _that.$http.post('http://192.168.13.154/login', this.loginForm).then(response => {
+//                            console.log(response);
+//                        });
                         setTimeout(function() {
-                            _that.$router.push('/panel');
+                            window.localStorage.setItem('activeId', '1-1');
+                            _that.$router.push('/panel/show');
                         }, 2000);
                     } else {
                         _that.$Message.error(_that.$t('Login failure'));

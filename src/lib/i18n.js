@@ -15,7 +15,10 @@ const cn = {
     "User name cannot be empty": "用户名不能为空",
     "The letter begins with 6-18 digits, only with letters, numbers, and underscores": "字母开头, 6-18位, 只能名含字母、数字和下划线",
     "Login successful": "登录成功",
-    "Login failure": "登录失败"
+    "Login failure": "登录失败",
+    "Import configuration": "导入配置",
+    "Import": "导入",
+    "Cancel": "取消"
 };
 
 const en = {
@@ -32,7 +35,10 @@ const en = {
     "User name cannot be empty": "User name cannot be empty",
     "The letter begins with 6-18 digits, only with letters, numbers, and underscores": "The letter begins with 6-18 digits, only with letters, numbers, and underscores",
     "Login successful": "Login successful",
-    "Login failure": "Login failure"
+    "Login failure": "Login failure",
+    "Import configuration": "Import configuration",
+    "Import": "Import",
+    "Cancel": "Cancel"
 };
 
 export default {
