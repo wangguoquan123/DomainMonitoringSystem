@@ -1,7 +1,7 @@
 <template>
     <div class="domain-query">
         <div class="query-tool">
-            
+
         </div>
         <el-table
                 stripe
