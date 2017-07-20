@@ -149,8 +149,8 @@
     }
     .nav-toggle {
         background: #303642;
+        color: white;
         font-size: 14px;
-        color: rgba(255,255,255,.7);
         position: relative;
         cursor: default;
         z-index: 1;
@@ -189,7 +189,7 @@
     }
     .el-menu--dark .el-menu-item, .el-menu--dark .el-submenu__title {
         background-color: #303642;
-        color: #bfcbd9;
+        color: white;
     }
     .el-menu--dark .el-submenu__title {
         border-bottom: 1px solid #21252d;
@@ -205,7 +205,7 @@
     }
     .el-submenu.is-opened .el-menu-item.is-active,
     .el-menu--dark .el-submenu .el-menu .el-menu-item:hover{
-        background-color: #2a7ace;
+        background-color: #219cea;
     }
     .el-submenu .el-menu-item {
         height: 47px;

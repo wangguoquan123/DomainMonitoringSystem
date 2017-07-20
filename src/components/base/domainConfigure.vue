@@ -3,6 +3,43 @@
         <div class="configure-tool">
             <el-button type="primary" @click="ShowModel">{{ $t('Import configuration') }}</el-button>
         </div>
+        <el-table
+            stripe
+            border
+            highlight-current-row
+            :data="tableData"
+            style="width: 100%"
+            @current-change="handleCurrentChange">
+            <el-table-column
+                type="selection"
+                width="55">
+            </el-table-column>
+            <el-table-column
+                prop="date"
+                label="日期"
+                width="180"
+                sortable>
+            </el-table-column>
+            <el-table-column
+                prop="name"
+                label="姓名"
+                width="180"
+                sortable>
+            </el-table-column>
+            <el-table-column
+                prop="address"
+                label="地址">
+            </el-table-column>
+        </el-table>
+        <el-pagination
+            @size-change="handleSizeChange"
+            @current-change="handleCurrentChange"
+            :current-page="currentPage"
+            :page-sizes="[10, 30, 50, 100]"
+            :page-size="pageSize"
+            layout="total, sizes, prev, pager, next, jumper"
+            :total="pageTotal">
+        </el-pagination>
         <el-dialog :title="$t('Import configuration')" :visible.sync="dialogTableVisible" size="tiny">
             <p>
                 <i class="fa fa-exclamation-circle"></i>
@@ -23,10 +60,38 @@
         data() {
             return {
                 dialogTableVisible: false,
-                value: ''
+                value: '',
+                tableData: [
+                    {
+                        date: '2016-05-02',
+                        name: '王小虎',
+                        address: '上海市普陀区金沙江路 1518 弄'
+                    },
+                    {
+                        date: '2016-05-04',
+                        name: '王小虎',
+                        address: '上海市普陀区金沙江路 1517 弄'
+                    },
+                    {
+                        date: '2016-05-01',
+                        name: '王小虎',
+                        address: '上海市普陀区金沙江路 1519 弄'
+                    },
+                    {
+                        date: '2016-05-03',
+                        name: '王小虎',
+                        address: '上海市普陀区金沙江路 1516 弄'
+                    }
+                ],
+                currentPage: 1,
+                pageSize: 0,
+                pageTotal: 0
             }
         },
         props: [],
+        mounted() {
+            this.pageTotal = this.tableData.length;
+        },
         methods: {
             ShowModel() {
                 this.dialogTableVisible = true;
@@ -34,21 +99,30 @@
             hideModel() {
                 this.dialogTableVisible = false;
             },
+            handleCurrentChange(currentRow, oldCurrentRow) {
+
+            },
+            handleSizeChange(val) {
+                console.log(`每页 ${val} 条`);
+            },
+            handleCurrentChange(val) {
+                console.log(`当前页: ${val}`);
+            },
             submitConfig() {
                 let _that = this;
                 let _off = true;
                 let _newValue = this.value.split('\n');
-                _newValue.forEach(function(value, index, array) {
-                    if (value !== '' && _that.toTrim(value)) {
+                for (let i = 0, len = _newValue.length; i < len; i ++) {
+                    if (_newValue[i] !== '' && !_that.toTrim(_newValue[i])) {
                         _off = true;
                     } else {
                         _off = false;
+                        alert('不可以');
+                        return false;
                     }
-                });
+                }
                 if (_off) {
                     alert('可以提交');
-                } else {
-                    alert('不可以');
                 }
             },
             toTrim(str) {

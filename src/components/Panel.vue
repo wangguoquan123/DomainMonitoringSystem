@@ -42,7 +42,7 @@
 </script>
 
 <style lang="scss">
-    body, ul {
+    body, ul, h1 {
         margin: 0;
         padding: 0;
     }

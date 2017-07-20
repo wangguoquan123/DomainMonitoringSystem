@@ -1,13 +1,15 @@
 <template>
     <div class="login">
-        <Row class="header bg">
-            <h1>{{ $t('Hebei key domain name monitoring system') }}</h1>
-            <div class="switch-language">
-                <a href="javascript:void(0);" @click="changeLanguages('cn')">中</a>
-                &nbsp;/&nbsp;
+        <el-row class="header bg">
+            <el-col>
+                <h1>{{ $t('Hebei key domain name monitoring system') }}</h1>
+                <div class="switch-language">
+                    <a href="javascript:void(0);" @click="changeLanguages('cn')">中</a>
+                    &nbsp;/&nbsp;
                 <a href="javascript:void(0);" @click="changeLanguages('en')">En</a>
-            </div>
-        </Row>
+                </div>
+            </el-col>
+        </el-row>
         <div class="content rel" :style="{ height: contentHeight }">
             <div class="translate-center content-main">
                 <div class="login-form-header rel">
@@ -20,32 +22,30 @@
                     </div>
                 </div>
                 <div class="login-form-content">
-                    <Form ref="loginForm" :model="loginForm" :rules="ruleLogin">
-                        <Form-item prop="user">
-                            <Input type="text" v-model="loginForm.user" :placeholder="$t('Please enter a user name in the mailbox format')" size="large">
-                                <Icon type="ios-person-outline" slot="prepend"></Icon>
-                            </Input>
-                        </Form-item>
-                        <Form-item prop="password">
-                            <Input type="password" v-model="loginForm.password" :placeholder="$t('Please input a password')" size="large">
-                                <Icon type="ios-locked-outline" slot="prepend"></Icon>
-                            </Input>
-                        </Form-item>
-                        <Form-item>
-                            <Checkbox v-model="rememberPassword">{{ $t('Remember password') }}</Checkbox>
-                        </Form-item>
-                        <Form-item class="login-btn-group">
-                            <Button type="primary" class="login-btn" @click="handleSubmit('loginForm')">{{ $t('Logon immediately') }}</Button>
-                        </Form-item>
-                    </Form>
+                    <el-form ref="loginForm" :model="loginForm" :rules="ruleLogin">
+                        <el-form-item prop="user">
+                            <i class="fa fa-user-circle-o"></i>
+                            <el-input type="text" v-model="loginForm.user" :placeholder="$t('Please enter a user name in the mailbox format')" size="large"></el-input>
+                        </el-form-item>
+                        <el-form-item prop="password">
+                            <i class="fa fa-lock"></i>
+                            <el-input type="password" v-model="loginForm.password" :placeholder="$t('Please input a password')" size="large"></el-input>
+                        </el-form-item>
+                        <el-form-item>
+                            <el-checkbox v-model="rememberPassword">{{ $t('Remember password') }}</el-checkbox>
+                        </el-form-item>
+                        <el-form-item class="login-btn-group">
+                            <el-button type="primary" class="login-btn" @click="handleSubmit('loginForm')">{{ $t('Logon immediately') }}</el-button>
+                        </el-form-item>
+                    </el-form>
                 </div>
             </div>
         </div>
-        <Row class="footer bg">
-            <Col :span="24">
+        <el-row class="footer bg">
+            <el-col :span="24">
                 备案, 联系我们, 微信公众号
-            </Col>
-        </Row>
+            </el-col>
+        </el-row>
     </div>
 </template>
 
@@ -115,7 +115,8 @@
                                 password: _that.loginForm.password
                             }));
                         }
-                        _that.$Message.success(_that.$t('Login successful'));
+                        _that.$message(_that.$t('Login successful'));
+                        //_that.$Message.success(_that.$t('Login successful'));
 //                        _that.$http.post('http://192.168.13.154/login', this.loginForm).then(response => {
 //                            console.log(response);
 //                        });
@@ -124,7 +125,7 @@
                             _that.$router.push('/panel/show');
                         }, 2000);
                     } else {
-                        _that.$Message.error(_that.$t('Login failure'));
+                        _that.$message(_that.$t('Login failure'));
                     }
                 })
             },
@@ -153,6 +154,13 @@
 
 <style lang="scss">
 
+    body, h1 {
+        margin: 0;
+        padding: 0;
+    }
+    a {
+        text-decoration: none;
+    }
     .rel {
         position: relative;
     }
@@ -227,18 +235,30 @@
         }
         .switch-language {
             float: right;
-            margin-top: 6px;
             a {
+                color: white;
                 font-size: 14px;
             }
         }
     }
-    .ivu-icon {
-        font-size: 22px;
-        color: rgb(22, 137, 251);
+    .el-input {
+        & > input {
+            padding: 3px 10px 3px 40px;
+            font-size: 14px;
+        }
     }
-    .ivu-input-group-large > .ivu-input-group-prepend {
-        padding: 6px 10px;
+    .el-form-item__content {
+        i {
+            position: absolute;
+            left: 9px;
+            top: 10px;
+            z-index: 2;
+            font-size: 22px;
+            color: #4b9efa;
+        }
+        i.fa-lock {
+            left: 14px;
+        }
     }
 
 </style>
