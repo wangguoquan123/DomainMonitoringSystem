@@ -1,7 +1,6 @@
 <template>
     <div class="domain-configure">
-        <el-button type="primary" @click="ShowModel">导入域名</el-button>
-        <el-button type="primary" @click="ShowDNSModel">导入DNS配置信息</el-button>
+        <el-button type="primary" @click="ShowModel">导入域名信息</el-button>
         <data-tables
                 :data="tableData"
                 @selection-change="handleSelectionChange"
@@ -43,12 +42,6 @@
                 <el-button type="primary" @click="submitConfig">{{ $t('Import') }}</el-button>
             </div>
         </el-dialog>
-        <el-dialog title="导入DNS配置信息" :visible.sync="dialogTableDNS" size="tiny">
-            <div style="text-align: right; margin-top: 15px;">
-                <el-button @click="hideDNSModel">{{ $t('Cancel') }}</el-button>
-                <el-button type="primary" @click="submitDNSConfig">{{ $t('Import') }}</el-button>
-            </div>
-        </el-dialog>
     </div>
 </template>
 
@@ -63,7 +56,6 @@
         data() {
             return {
                 dialogTableVisible: false,
-                dialogTableDNS: false,
                 value: '',
                 lang: '',
                 tableData: [
@@ -151,12 +143,6 @@
             hideModel() {
                 this.dialogTableVisible = false;
             },
-            hideDNSModel() {
-                this.dialogTableDNS = false;
-            },
-            ShowDNSModel() {
-                this.dialogTableDNS = true;
-            },
             handleSelectionChange(value) {
                 //console.log(value);
             },
@@ -179,9 +165,6 @@
                     pageSizes: [10, 20, 50,100],
                     currentPage: 1
                 }
-            },
-            submitDNSConfig() {
-
             },
             submitConfig() {
                 let _arr = [];
