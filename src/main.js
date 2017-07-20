@@ -27,6 +27,7 @@ const router = new VueRouter({
 
 router.beforeEach((to, from, next) => {
     store.commit('menuActive', menuId[to.fullPath]);
+    window.localStorage.setItem('activeId', store.state.activeId);
     next();
 });
 
@@ -52,11 +53,11 @@ const i18n = new VueI18n({
 
 /* eslint-disable no-new */
 new Vue({
-  el: '#app',
-  router,
-  i18n,
-  store,
-  menuId,
-  template: '<App/>',
-  components: { App }
+    el: '#app',
+    router,
+    i18n,
+    store,
+    menuId,
+    template: '<App/>',
+    components: { App }
 });

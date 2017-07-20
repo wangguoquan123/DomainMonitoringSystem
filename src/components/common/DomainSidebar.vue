@@ -40,28 +40,6 @@
                             <span class="nav-text">告警</span>
                         </el-menu-item>
                     </el-submenu>
-                    <el-submenu index="2">
-                        <template slot="title">
-                            <i class="fa fa-square"></i>
-                            <span class="nav-title-text">qqqqqq</span>
-                        </template>
-                        <el-menu-item index="2-1">
-                            <i class="fa fa-angle-double-right"></i>
-                            <span class="nav-text">111111</span>
-                        </el-menu-item>
-                        <el-menu-item index="2-2">
-                            <i class="fa fa-angle-double-right"></i>
-                            <span class="nav-text">22222</span>
-                        </el-menu-item>
-                        <el-menu-item index="2-3">
-                            <i class="fa fa-angle-double-right"></i>
-                            <span class="nav-text">33333</span>
-                        </el-menu-item>
-                        <el-menu-item index="2-4">
-                            <i class="fa fa-angle-double-right"></i>
-                            <span class="nav-text">444444</span>
-                        </el-menu-item>
-                    </el-submenu>
                 </el-menu>
             </el-col>
         </el-row>
@@ -144,7 +122,7 @@
         float: left;
     }
     .el-menu--dark {
-        min-height: 500px;
+        min-height: 700px;
         background-color: #303642;
     }
     .nav-toggle {
