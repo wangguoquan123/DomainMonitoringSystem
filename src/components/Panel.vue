@@ -52,28 +52,7 @@
     .customer_contents {
         position: relative;
     }
-    .ivu-spin-fix {
-        display: block;
-        .ivu-spin-main {
-            display: inline-block;
-            width: auto;
-            height: auto;
-            position: absolute;
-            left: 50%;
-            top: 50%;
-            -webkit-transform: translate(-50%, -50%);
-            -moz-transform: translate(-50%, -50%);
-            -ms-transform: translate(-50%, -50%);
-            -o-transform: translate(-50%, -50%);
-            transform: translate(-50%, -50%);
-        }
-    }
-    .contents-icon-load {
-        animation: iconLoad 1s linear infinite;
-    }
-    @keyframes iconLoad {
-        from { transform: rotate(0deg);}
-        50%  { transform: rotate(180deg);}
-        to   { transform: rotate(360deg);}
+    .el-pagination__jump {
+        margin-right: 10px;
     }
 </style>

@@ -3,11 +3,6 @@
         <el-row class="header bg">
             <el-col>
                 <h1>{{ $t('Hebei key domain name monitoring system') }}</h1>
-                <div class="switch-language">
-                    <a href="javascript:void(0);" @click="changeLanguages('cn')">中</a>
-                    &nbsp;/&nbsp;
-                <a href="javascript:void(0);" @click="changeLanguages('en')">En</a>
-                </div>
             </el-col>
         </el-row>
         <div class="content rel" :style="{ height: contentHeight }">
@@ -111,21 +106,22 @@
                         if (_that.rememberPassword) {
                             window.localStorage.setItem('userInfo', '');
                             window.localStorage.setItem('userInfo', JSON.stringify({
-                                name: _that.loginForm.user,
+                                user: _that.loginForm.user,
                                 password: _that.loginForm.password
                             }));
                         }
-                        _that.$message(_that.$t('Login successful'));
-                        //_that.$Message.success(_that.$t('Login successful'));
-//                        _that.$http.post('http://192.168.13.154/login', this.loginForm).then(response => {
-//                            console.log(response);
-//                        });
-                        setTimeout(function() {
-                            window.localStorage.setItem('activeId', '1-1');
-                            _that.$router.push('/panel/show');
-                        }, 2000);
+                        _that.$http.post('http://172.16.12.7:8080/login', this.loginForm).then(response => {
+                            _that.$message(_that.$t('Login successful'));
+                            console.log(response);
+                        }).catch(error => {
+                            console.log(error);
+                        });
+//                        setTimeout(function() {
+//                            window.localStorage.setItem('activeId', '1-1');
+//                            _that.$router.push('/panel/show');
+//                        }, 2000);
                     } else {
-                        _that.$message(_that.$t('Login failure'));
+                        _that.$message('您输入的用户名或密码错误!');
                     }
                 })
             },
@@ -241,10 +237,12 @@
             }
         }
     }
-    .el-input {
-        & > input {
-            padding: 3px 10px 3px 40px;
-            font-size: 14px;
+    .login-form-content {
+        .el-input {
+            & > input {
+                padding: 3px 10px 3px 40px;
+                font-size: 14px;
+            }
         }
     }
     .el-form-item__content {

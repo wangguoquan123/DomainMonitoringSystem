@@ -4,6 +4,7 @@ import Vue from 'vue'
 import App from '@/App'
 import VueRouter from 'vue-router';
 import VueResource from 'vue-resource';
+import DataTables from 'vue-data-tables';
 import routes from '@/router/index.js';
 import VueI18n from 'vue-i18n';
 import i18ns from '@/lib/i18n.js';
@@ -18,6 +19,7 @@ Vue.use(VueI18n);
 Vue.use(verify);
 Vue.use(VueResource);
 Vue.use(elementUI);
+Vue.use(DataTables);
 
 const router = new VueRouter({
     routes
@@ -25,6 +27,7 @@ const router = new VueRouter({
 
 router.beforeEach((to, from, next) => {
     store.commit('menuActive', menuId[to.fullPath]);
+    window.localStorage.setItem('activeId', store.state.activeId);
     next();
 });
 
@@ -50,11 +53,11 @@ const i18n = new VueI18n({
 
 /* eslint-disable no-new */
 new Vue({
-  el: '#app',
-  router,
-  i18n,
-  store,
-  menuId,
-  template: '<App/>',
-  components: { App }
+    el: '#app',
+    router,
+    i18n,
+    store,
+    menuId,
+    template: '<App/>',
+    components: { App }
 });
