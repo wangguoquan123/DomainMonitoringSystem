@@ -16,24 +16,7 @@
             <el-table-column
                 prop="date"
                 sortable
-                label="时间">
-            </el-table-column>
-            <el-table-column
-                prop="name"
-                sortable
-                label="名称">
-            </el-table-column>
-            <el-table-column
-                prop="address"
-                sortable
-                label="地址">
-            </el-table-column>
-            <el-table-column
-                sortable
-                label="状态">
-                <template scope="scope">
-                    <el-tag :type="scope.row.status">{{ scope.row.status }}</el-tag>
-                </template>
+                label="邮箱地址">
             </el-table-column>
         </data-tables>
     </div>
@@ -51,13 +34,13 @@
                 lang: '',
                 tableData: [
                     {
-                        date: '2016-05-02',
+                        date: 'sfssfsf@qq.com',
                         name: '王小虎',
                         address: '上海市普陀区金沙江路 1518 弄',
                         status: 'success'
                     },
                     {
-                        date: '2016-05-04',
+                        date: 'sfsssssssssssf@qq.com',
                         name: '王小虎',
                         address: '上海市普陀区金沙江路 1517 弄',
                         status: 'success'
