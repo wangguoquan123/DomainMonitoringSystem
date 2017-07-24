@@ -403,7 +403,11 @@
                             return false;
                         }
                     }
-                    this.tableData.unshift(this.singleData);
+                    this.tableData.unshift({
+                        domain: this.singleData.domain,
+                        start: this.singleData.start,
+                        end: this.singleData.end
+                    });
                     this.$message.success('可以添加!');
                     this.dialogSingleData = false;
                 }

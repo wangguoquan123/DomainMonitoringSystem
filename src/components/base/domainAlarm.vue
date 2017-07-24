@@ -1,7 +1,7 @@
 <template>
     <div class="domain-alarm">
-        <el-button type="primary" @click="dialogAddEmail = true;">添加邮箱</el-button>
-        <el-button type="danger" @click="dialogSingleData = true">删除邮箱</el-button>
+        <el-button type="primary" @click="dialogAddEmailEvent">添加邮箱</el-button>
+        <el-button type="danger" @click="removeEmailEvent">删除邮箱</el-button>
         <data-tables
                 :data="tableData"
                 @selection-change="handleSelectionChange"
@@ -169,7 +169,8 @@
                     role: [
                         { required: true, message: '请选择角色', trigger: 'change' }
                     ]
-                }
+                },
+                selectRow: []
             }
         },
         props: [],
@@ -183,7 +184,8 @@
         },
         methods: {
             handleSelectionChange(value) {
-                //console.log(value);
+                console.log(value);
+                this.selectRow = value;
             },
             rowClickChange(row, index, arr){
                 //console.log(row, index, arr);
@@ -228,6 +230,12 @@
                         }
                     }
                 }).then(({ value }) => {
+                    for (let i = 0, len = _that.tableData.length; i < len; i ++) {
+                        if (_that.tableData[i].email === value) {
+                            _that.$message.error('要修改的邮箱地址已重在, 请返回重新修改!');
+                            return false;
+                        }
+                    }
                     _that.$message({
                         type: 'success',
                         message: '邮箱修改成功!'
@@ -272,14 +280,58 @@
                     });
                 });
             },
+            dialogAddEmailEvent() {
+                this.dialogAddEmail = true;
+                this.addEmail.email = '';
+                this.addEmail.role = '';
+            },
             submitEmail(formName) {
-                this.$refs[formName].validate((valid) => {
+                let _that = this;
+                _that.$refs[formName].validate((valid) => {
                     if (valid) {
-                        alert('submit!');
+                        for (let i = 0, len = _that.tableData.length; i < len; i ++) {
+                            if (_that.tableData[i].email === _that.addEmail.email) {
+                                _that.$message.error('要添加的域名已存在!');
+                                return false;
+                            }
+                        }
+                        _that.$message.success('添加成功!');
+                        _that.tableData.unshift({
+                            email: _that.addEmail.email,
+                            role: _that.addEmail.role
+                        });
+                        _that.dialogAddEmail = false;
                     } else {
-                        console.log('error submit!!');
+                        _that.$message.error('添加失败!');
                         return false;
                     }
+                });
+            },
+            removeEmailEvent() {
+                let _that = this;
+                this.$confirm('此操作将要删除所选的邮箱地址, 是否继续?', '提示', {
+                    confirmButtonText: '确定',
+                    cancelButtonText: '取消',
+                    type: 'warning'
+                }).then(() => {
+                    this.$message({
+                        type: 'success',
+                        message: '删除成功!'
+                    });
+                    console.log(_that.selectRow)
+                    for (let i = 0, len = _that.selectRow.length; i < len; i ++) {
+                        for (let k = 0, len = _that.tableData.length; k < len; k ++) {
+                            if (_that.selectRow[i].email === _that.tableData[k].email) {
+                                console.log(k, 1);
+                                _that.tableData.splice(k, 1);
+                            }
+                        }
+                    }
+                }).catch(() => {
+                    this.$message({
+                        type: 'info',
+                        message: '已取消删除'
+                    });
                 });
             }
         }
