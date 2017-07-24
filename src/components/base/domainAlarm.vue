@@ -1,5 +1,7 @@
 <template>
     <div class="domain-alarm">
+        <el-button type="primary" @click="dialogAddEmail = true;">添加邮箱</el-button>
+        <el-button type="danger" @click="dialogSingleData = true">删除邮箱</el-button>
         <data-tables
                 :data="tableData"
                 @selection-change="handleSelectionChange"
@@ -14,11 +16,53 @@
                 style="width: 100%">
             <el-table-column type="selection" width="42"></el-table-column>
             <el-table-column
-                prop="date"
+                prop="email"
                 sortable
                 label="邮箱地址">
             </el-table-column>
+            <el-table-column
+                prop="role"
+                sortable
+                label="角色">
+            </el-table-column>
+            <el-table-column
+                label="操作"
+                sortable="custom">
+                <template scope="scope">
+                    <el-button
+                        size='mini'
+                        type='primary'
+                        @click="modifyData(scope.$index, scope.row)"><i class="fa fa-undo fa-sm"></i>修改</el-button>
+                    <el-button
+                        size='mini'
+                        type='danger'
+                        @click="removeData(scope.$index, scope.row)"><i class="fa fa-trash-o fa-sm"></i>删除</el-button>
+                </template>
+            </el-table-column>
         </data-tables>
+        <el-dialog title="添加邮箱" :visible.sync="dialogAddEmail" size="small" class="email-data">
+            <el-form ref="addEmail" :model="addEmail" :rules="ruleEmail">
+                <el-form-item prop="email" style="width: 30%; display: inline-block;">
+                    <span class="text" style="margin: 0 10px;">邮箱：</span>
+                    <el-input v-model="addEmail.email" placeholder="请输入邮箱地址"></el-input>
+                </el-form-item>
+                <el-form-item prop="role" style="width: 30%; display: inline-block;">
+                    <span class="text" style="margin: 0 10px;">角色：</span>
+                    <el-select v-model="addEmail.role" placeholder="请选择角色">
+                        <el-option
+                            v-for="item in roleList"
+                            :key="item.value"
+                            :label="item.label"
+                            :value="item.value">
+                        </el-option>
+                    </el-select>
+                </el-form-item>
+                <el-form-item class="login-btn-group" style="text-align: right; margin-top: 15px;">
+                    <el-button @click="dialogAddEmail = false;">{{ $t('Cancel') }}</el-button>
+                    <el-button type="primary" @click="submitEmail('addEmail')">添加</el-button>
+                </el-form-item>
+            </el-form>
+        </el-dialog>
     </div>
 </template>
 
@@ -30,86 +74,101 @@
 
     export default {
         data() {
+            const validateEmail = (rule, value, callback) => {
+                let _reg = /^[a-zA-Z0-9_-]+@[a-zA-Z0-9_-]+(\.[a-zA-Z0-9_-]+)+$/;
+                if (value === '') {
+                    callback(new Error('邮箱地址不允许为空'));
+                } else if (value.length < 3) {
+                    callback(new Error('邮箱地址长度不允许小于2位'));
+                } else if (!_reg.test(value)) {
+                    callback(new Error('邮箱地址格式不正确'));
+                } else {
+                    callback();
+                }
+            };
             return {
+                dialogAddEmail: false,
                 lang: '',
                 tableData: [
                     {
-                        date: 'sfssfsf@qq.com',
-                        name: '王小虎',
-                        address: '上海市普陀区金沙江路 1518 弄',
-                        status: 'success'
+                        email: 'gyby5911@alibaba.com.cn',
+                        role: 'Owner'
                     },
                     {
-                        date: 'sfsssssssssssf@qq.com',
-                        name: '王小虎',
-                        address: '上海市普陀区金沙江路 1517 弄',
-                        status: 'success'
+                        email: 'dgjs0769@126.com',
+                        role: 'Owner'
                     },
                     {
-                        date: '2016-05-01',
-                        name: '王小虎',
-                        address: '上海市普陀区金沙江路 1519 弄',
-                        status: 'warning'
+                        email: 'hr@bmschina.com',
+                        role: 'Owner'
                     },
                     {
-                        date: '2016-05-03',
-                        name: '王小虎',
-                        address: '上海市普陀区金沙江路 1516 弄',
-                        status: 'success'
+                        email: 'zhaomingwqw@163.com',
+                        role: 'Owner'
                     },
                     {
-                        date: '2016-05-05',
-                        name: '王小虎',
-                        address: '上海市普陀区金沙江路 1521 弄',
-                        status: 'danger'
+                        email: 'ruihongfair@163.com',
+                        role: 'Owner'
                     },
                     {
-                        date: '2016-05-06',
-                        name: '王小虎',
-                        address: '上海市普陀区金沙江路 153 弄',
-                        status: 'success'
+                        email: 'bzfangzheng@126.com',
+                        role: 'Owner'
                     },
                     {
-                        date: '2016-05-07',
-                        name: '王小虎',
-                        address: '上海市普陀区金沙江路 1545 弄',
-                        status: 'warning'
+                        email: 'zsstssjxzzyxgs@3158.com',
+                        role: 'Owner'
                     },
                     {
-                        date: '2016-05-08',
-                        name: '王小虎',
-                        address: '上海市普陀区金沙江路 1588 弄',
-                        status: 'warning'
+                        email: 'sdzgjx@126.com',
+                        role: 'Owner'
                     },
                     {
-                        date: '2016-05-09',
-                        name: '王小虎',
-                        address: '上海市普陀区金沙江路 1562 弄',
-                        status: 'danger'
+                        email: 'sale@xinhuajg.com',
+                        role: 'Owner'
                     },
                     {
-                        date: '2016-05-10',
-                        name: '王小虎',
-                        address: '上海市普陀区金沙江路 15245 弄',
-                        status: 'warning'
+                        email: '222@126.com',
+                        role: 'Owner'
                     },
                     {
-                        date: '2016-05-11',
-                        name: '王小虎',
-                        address: '上海市普陀区金沙江路 15666 弄',
-                        status: 'success'
+                        email: 'ivanoowin@hotmail.com',
+                        role: 'Owner'
                     },
                     {
-                        date: '2016-05-12',
-                        name: '王小虎',
-                        address: '上海市普陀区金沙江路 158888 弄',
-                        status: 'success'
-                    }
+                        email: 'chinawutong@126.com',
+                        role: 'Owner'
+                    },
+                    {
+                        email: 'info@hbzrzz.cn',
+                        role: 'Owner'
+                    },
                 ],
                 searchObj: {
                     placeholder: '',
                     offset:20,
                     width:4
+                },
+                addEmail: {
+                    email: '',
+                    role: ''
+                },
+                roleList: [
+                    {
+                        value: 'Owner',
+                        label: '拥有者'
+                    },
+                    {
+                        value: 'Controller',
+                        label: '管理者'
+                    }
+                ],
+                ruleEmail: {
+                    email: [
+                        {required: true, trigger: 'blur', validator: validateEmail}
+                    ],
+                    role: [
+                        { required: true, message: '请选择角色', trigger: 'change' }
+                    ]
                 }
             }
         },
@@ -146,14 +205,82 @@
                     currentPage: 1
                 }
             },
-            tableRowClassName(row, index) {
-                console.log(index);
-                if (index === 1) {
-                    return 'info-row';
-                } else if (index === 3) {
-                    return 'positive-row';
-                }
-                return '';
+            modifyData(index, row) {
+                let _that = this;
+                _that.$prompt('请输入要修改的邮箱', '提示', {
+                    confirmButtonText: '确定',
+                    cancelButtonText: '取消',
+                    inputPattern: /[\w!#$%&'*+/=?^_`{|}~-]+(?:\.[\w!#$%&'*+/=?^_`{|}~-]+)*@(?:[\w](?:[\w-]*[\w])?\.)+[\w](?:[\w-]*[\w])?/,
+                    inputErrorMessage: '邮箱格式不正确',
+                    inputPlaceholder: '请输入要修改的邮箱地址',
+                    beforeClose: (action, instance, done) => {
+                        if (action === 'confirm') {
+                            instance.confirmButtonLoading = true;
+                            instance.confirmButtonText = '执行中...';
+                            setTimeout(() => {
+                                done();
+                                setTimeout(() => {
+                                    instance.confirmButtonLoading = false;
+                                }, 300);
+                            }, 3000);
+                        } else {
+                            done();
+                        }
+                    }
+                }).then(({ value }) => {
+                    _that.$message({
+                        type: 'success',
+                        message: '邮箱修改成功!'
+                    });
+                    _that.tableData[index].email = value;
+                }).catch(() => {
+                    _that.$message({
+                        type: 'info',
+                        message: '取消邮箱修改!'
+                    });
+                });
+            },
+            removeData(index, row) {
+                this.$confirm('此操作将会删除此行的数据, 是否继续?', '提示', {
+                    confirmButtonText: '确定',
+                    cancelButtonText: '取消',
+                    type: 'warning',
+                    beforeClose: (action, instance, done) => {
+                        if (action === 'confirm') {
+                            instance.confirmButtonLoading = true;
+                            instance.confirmButtonText = '执行中...';
+                            setTimeout(() => {
+                                done();
+                                setTimeout(() => {
+                                    instance.confirmButtonLoading = false;
+                                }, 300);
+                            }, 3000);
+                        } else {
+                            done();
+                        }
+                    }
+                }).then(() => {
+                    this.$message({
+                        type: 'success',
+                        message: '删除成功!'
+                    });
+                    this.tableData.splice(index, 1);
+                }).catch(() => {
+                    this.$message({
+                        type: 'info',
+                        message: '已取消删除'
+                    });
+                });
+            },
+            submitEmail(formName) {
+                this.$refs[formName].validate((valid) => {
+                    if (valid) {
+                        alert('submit!');
+                    } else {
+                        console.log('error submit!!');
+                        return false;
+                    }
+                });
             }
         }
     }
@@ -168,6 +295,19 @@
     }
     .domain-alarm {
         padding: 30px;
+        .el-input {
+            width: 73%;
+            display: inline-block;
+        }
+        .el-select {
+            width: 73%;
+            .el-input {
+                width: auto;
+            }
+        }
+        .el-form-item__error {
+            margin-left: 66px;
+        }
     }
     .tool-bar {
         text-align: right;
