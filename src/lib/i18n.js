@@ -18,7 +18,9 @@ const cn = {
     "Login failure": "登录失败",
     "Import configuration": "导入配置",
     "Import": "导入",
-    "Cancel": "取消"
+    "Cancel": "取消",
+    "User not found": "用户没有找到",
+    "Password error": "密码错误"
 };
 
 const en = {
@@ -38,7 +40,9 @@ const en = {
     "Login failure": "Login failure",
     "Import configuration": "Import configuration",
     "Import": "Import",
-    "Cancel": "Cancel"
+    "Cancel": "Cancel",
+    "User not found": "User not found",
+    "Password error": "Password error"
 };
 
 export default {

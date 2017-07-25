@@ -3,11 +3,11 @@
         <el-row>
             <el-col :span="24">
                 <div class="header-main">
-                    {{ $t('Hebei key domain name monitoring system') }}
+                    <a href="/" style="color: white; text-decoration: none;">{{ $t('Hebei key domain name monitoring system') }}</a>
                     <div class="header-ext">
                         <ul class="list">
-                            <li class="item-border"></li>
-                            <li class="item message" style="width: 46px; text-align: center;">
+                            <li class="item-border" style="display: none;"></li>
+                            <li class="item message" style="width: 46px; text-align: center; display: none;">
                                 <i class="fa fa-commenting-o"></i>
                                 <span class="message-num">99+</span>
                                 <ul class="message-list">
@@ -33,7 +33,7 @@
                                     </li>
                                 </ul>
                             </li>
-                            <li class="item-border"></li>
+                            <li class="item-border" style="display: none;"></li>
                             <li class="item user">
                                 <span class="user-text">
                                     <span class="user-level">系统超级管理员</span>
@@ -43,18 +43,6 @@
                                     <img src="http://www.feizl.com/upload2007/2012_01/120115153325811.jpg" alt="头像" />
                                 </span>
                                 <ul class="user-list">
-                                    <li class="user-item">
-                                        <i class="fa fa-hand-peace-o"></i>
-                                        1111111
-                                    </li>
-                                    <li class="user-item">
-                                        <i class="fa fa-hand-peace-o"></i>
-                                        222222
-                                    </li>
-                                    <li class="user-item">
-                                        <i class="fa fa-hand-peace-o"></i>
-                                        33333
-                                    </li>
                                     <li class="user-item" @click="loginOut">
                                         <i class="fa fa-hand-peace-o"></i>
                                         登出
@@ -90,6 +78,7 @@
                         message: '退出成功!'
                     });
                     setTimeout(function() {
+                        window.localStorage.setItem('scrftoken', '');
                         _that.$router.push('/');
                     }, 2000);
                 }).catch(() => {

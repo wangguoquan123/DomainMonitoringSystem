@@ -25,9 +25,37 @@ const router = new VueRouter({
     routes
 });
 
+Vue.http.interceptors.push(function(request, next) {
+
+    // modify method
+    request.method = 'POST';
+
+    // modify headers
+    let _token = window.localStorage.getItem('scrftoken');
+    request.headers.set('Token', _token);
+
+    // continue to next interceptor
+    next();
+});
+
 router.beforeEach((to, from, next) => {
+    var domainBar = {
+        one: ['基础功能'],
+        two: [
+            ['展示', '查询', '配置', '告警']
+        ]
+    };
     store.commit('menuActive', menuId[to.fullPath]);
     window.localStorage.setItem('activeId', store.state.activeId);
+    if (to.fullPath !== '/') {
+        let value = store.state.activeId;
+        let _oneNum = value.split('-')[0];
+        let _twoNum = value.split('-')[1];
+        store.commit('domainBarActive', {
+            one: domainBar.one[_oneNum-1],
+            two: domainBar.two[_oneNum-1][_twoNum-1]
+        });
+    }
     next();
 });
 

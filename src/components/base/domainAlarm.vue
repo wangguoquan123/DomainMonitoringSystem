@@ -9,7 +9,7 @@
                 :has-action-col='false'
                 :search-def="searchObj"
                 :data-type="getSearchText(lang.locale)"
-                :pagination-def='getPaginationDef()'
+                :pagination-def="getPaginationDef()"
                 stripe
                 border
                 fit
@@ -92,55 +92,68 @@
                 tableData: [
                     {
                         email: 'gyby5911@alibaba.com.cn',
-                        role: 'Owner'
+                        role: 'Owner',
+                        status: 0
                     },
                     {
                         email: 'dgjs0769@126.com',
-                        role: 'Owner'
+                        role: 'Owner',
+                        status: 0
                     },
                     {
                         email: 'hr@bmschina.com',
-                        role: 'Owner'
+                        role: 'Owner',
+                        status: 1
                     },
                     {
                         email: 'zhaomingwqw@163.com',
-                        role: 'Owner'
+                        role: 'Owner',
+                        status: 0
                     },
                     {
                         email: 'ruihongfair@163.com',
-                        role: 'Owner'
+                        role: 'Owner',
+                        status: 1
                     },
                     {
                         email: 'bzfangzheng@126.com',
-                        role: 'Owner'
+                        role: 'Owner',
+                        status: 1
                     },
                     {
                         email: 'zsstssjxzzyxgs@3158.com',
-                        role: 'Owner'
+                        role: 'Owner',
+                        status: 0
                     },
                     {
                         email: 'sdzgjx@126.com',
-                        role: 'Owner'
+                        role: 'Owner',
+                        status: 0
                     },
                     {
                         email: 'sale@xinhuajg.com',
-                        role: 'Owner'
+                        role: 'Owner',
+                        status: 0
                     },
                     {
                         email: '222@126.com',
-                        role: 'Owner'
+                        role: 'Owner',
+                        status: 1
                     },
                     {
                         email: 'ivanoowin@hotmail.com',
-                        role: 'Owner'
+                        role: 'Owner',
+                        status: 1
                     },
                     {
                         email: 'chinawutong@126.com',
-                        role: 'Owner'
+                        role: 'Owner',
+                        status: 0
                     },
                     {
                         email: 'info@hbzrzz.cn',
-                        role: 'Owner'
+                        role: 'Owner',
+                        status: 0
                     },
                 ],
                 searchObj: {
@@ -318,15 +331,8 @@
                         type: 'success',
                         message: '删除成功!'
                     });
-                    console.log(_that.selectRow)
-                    for (let i = 0, len = _that.selectRow.length; i < len; i ++) {
-                        for (let k = 0, len = _that.tableData.length; k < len; k ++) {
-                            if (_that.selectRow[i].email === _that.tableData[k].email) {
-                                console.log(k, 1);
-                                _that.tableData.splice(k, 1);
-                            }
-                        }
-                    }
+                    console.log(_that.selectRow[i]);
+
                 }).catch(() => {
                     this.$message({
                         type: 'info',

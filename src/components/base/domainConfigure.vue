@@ -1,7 +1,6 @@
 <template>
     <div class="domain-configure">
         <el-button type="primary" @click="ShowModel">批量添加</el-button>
-        <el-button type="primary" @click="dialogSingleData = true">添加单条</el-button>
         <span class="border-style"></span>
         <el-upload
                 class="upload-demo"
@@ -13,7 +12,7 @@
                 ref="fileUpload"
                 style="display: inline-block;">
             <el-button slot="trigger" type="primary">导入</el-button>
-            <el-button style="margin-left: 10px;" type="success" @click="submitUpload">开始上传</el-button>
+            <el-button style="margin-left: 10px;" type="success" @click="submitUpload" :disabled="isFinish">开始上传</el-button>
         </el-upload>
         <span class="border-style"></span>
         <el-button type="danger" @click="removeSelectData" :disabled="selectRow.length === 0">删除</el-button>
@@ -56,7 +55,7 @@
                     <el-button
                         size='mini'
                         type='primary'
-                        @click="modifyDomainConfigure(scope.$index, scope.row)"><i class="fa fa-undo fa-sm"></i>修改</el-button>
+                        @click="modifyDomainConfigure(scope.$index, scope.row)"><i class="fa fa-undo fa-sm"></i>修改时间</el-button>
                     <el-button
                         size='mini'
                         type='danger'
@@ -87,21 +86,7 @@
                 <el-button type="primary" @click="submitConfig">添加</el-button>
             </div>
         </el-dialog>
-        <el-dialog title="增加单条数据" :visible.sync="dialogSingleData" size="small" class="single-data">
-            <span class="text">域名：</span><el-input v-model="singleData.domain" placeholder="请输入域名" style="width: 20%;"></el-input>
-            <span class="text">时间范围：</span>
-            <el-date-picker
-                v-model="singleDateTimeValue"
-                type="datetimerange"
-                placeholder="选择时间范围"
-                @change="singleDateTimeChange">
-            </el-date-picker>
-            <div style="text-align: right; margin-top: 15px;">
-                <el-button @click="dialogSingleData = false;">{{ $t('Cancel') }}</el-button>
-                <el-button type="primary" @click="submitSingleData">添加</el-button>
-            </div>
-        </el-dialog>
-        <el-dialog title="批量修改数据" :visible.sync="dialogModifyData" size="small" class="modify-data">
+        <el-dialog title="批量修改数据" :visible.sync="dialogModifyData" size="tiny" class="modify-data">
             <span>时间范围：</span>
             <el-date-picker
                 v-model="dialogModifyDate"
@@ -114,8 +99,7 @@
                 <el-button type="primary" @click="modifySelectData">修改</el-button>
             </div>
         </el-dialog>
-        <el-dialog title="修改单条数据" :visible.sync="modifySingleData" size="small" class="single-data">
-            <span class="text">域名：</span><el-input v-model="modifySingle.domain" placeholder="请输入域名" style="width: 20%;"></el-input>
+        <el-dialog title="修改时间" :visible.sync="modifySingleData" size="tiny" class="single-data">
             <span class="text">时间范围：</span>
             <el-date-picker
                     v-model="modifyDateTimeValue"
@@ -142,9 +126,9 @@
         data() {
             return {
                 dialogTableVisible: false,
-                dialogSingleData: false,
                 dialogModifyData: false,
                 modifySingleData: false,
+                isFinish: true,
                 value: '',
                 lang: '',
                 dialogDateTimeValue: [],
@@ -152,6 +136,12 @@
                     start: '',
                     end: ''
                 },
+                isShow: true,
+                faChevronDown: 'fa-chevron-down',
+                faChevronUp: 'fa-chevron-up',
+                ipsShow: true,
+                ips_faChevronDown: 'fa-chevron-down',
+                ips_faChevronUp: 'fa-chevron-up',
                 tableData: [
                     {
                         domain: 'www.baidu.com',
@@ -210,12 +200,6 @@
                     width:4
                 },
                 uploadTextValue: [],
-                singleData: {
-                    domain: '',
-                    start: '',
-                    end: ''
-                },
-                singleDateTimeValue: [],
                 selectRow: [],
                 dialogModifyDate: [],
                 modifyData: {
@@ -223,7 +207,6 @@
                     end: ''
                 },
                 modifySingle: {
-                    domain: '',
                     start: '',
                     end: ''
                 },
@@ -244,16 +227,18 @@
             this.dialogDateTimeValue[1] = _dateObj.endDate;
             this.dialogTimeValue.start = _dateObj.startDate.substring(0, _dateObj.startDate.length - 3);
             this.dialogTimeValue.end = _dateObj.endDate.substring(0, _dateObj.endDate.length - 3);
-            this.singleDateTimeValue[0] = _dateObj.startDate;
-            this.singleDateTimeValue[1] = _dateObj.endDate;
-            this.singleData.start = _dateObj.startDate.substring(0, _dateObj.startDate.length - 3);
-            this.singleData.end = _dateObj.endDate.substring(0, _dateObj.endDate.length - 3);
             this.dialogModifyDate[0] = _dateObj.startDate;
             this.dialogModifyDate[1] = _dateObj.endDate;
             this.modifyData.start = _dateObj.startDate.substring(0, _dateObj.startDate.length - 3);
             this.modifyData.end = _dateObj.endDate.substring(0, _dateObj.endDate.length - 3);
         },
         methods: {
+            ipsToggles() {
+                this.isShow = !this.isShow;
+            },
+            ipstoToggles() {
+                this.ipsShow = !this.ipsShow;
+            },
             ShowModel() {
                 this.dialogTableVisible = true;
             },
@@ -323,7 +308,7 @@
                         });
                     } else {
                         if (_newValue[i] === '') {
-                            this.$message.error('域名不能为空!');
+                            this.$message.error('域名列表不允许出现空格(回车换行符)!');
                         } else {
                             this.$message.error('【' + _newValue[i] +'】域名格式不正确, 请返回重新修改!');
                         }
@@ -364,64 +349,6 @@
             submitUpload() {
                 // 点击上传文件
                 this.$refs.fileUpload.submit();
-            },
-            submitSingleData() {
-                // 添加单条数据
-                let _off = true;
-                if (this.singleData.domain === '') {
-                    _off = false;
-                    this.$message.error('域名不能为空!');
-                    return false;
-                }
-                if (!this.domainFormat(this.toTrim(this.singleData.domain))) {
-                    _off = false;
-                    this.$message.error('域名格式不正确!');
-                    return false;
-                }
-                if (_off) {
-                    for (let i = 0, len = this.tableData.length; i < len; i ++) {
-                        if (this.singleData.domain === this.tableData[i].domain) {
-                            this.$confirm('此操作新添加的域名将会覆盖旧域名, 是否继续?', '提示', {
-                                confirmButtonText: '确定',
-                                cancelButtonText: '取消',
-                                type: 'warning'
-                            }).then(() => {
-                                this.$message({
-                                    type: 'success',
-                                    message: '添加成功!'
-                                });
-                                this.tableData[i].domain = this.singleData.domain;
-                                this.tableData[i].start = this.singleData.start;
-                                this.tableData[i].end = this.singleData.end;
-                                this.dialogSingleData = false;
-                            }).catch(() => {
-                                this.$message({
-                                    type: 'info',
-                                    message: '已取消添加'
-                                });
-                            });
-                            return false;
-                        }
-                    }
-                    this.tableData.unshift({
-                        domain: this.singleData.domain,
-                        start: this.singleData.start,
-                        end: this.singleData.end
-                    });
-                    this.$message.success('可以添加!');
-                    this.dialogSingleData = false;
-                }
-            },
-            singleDateTimeChange(value) {
-                let _arr = value.split(' ');
-                let _start = _arr[0] + ' ' + _arr[1].substring(0, _arr[1].length - 3);
-                let _end = _arr[3] + ' ' + _arr[4].substring(0, _arr[4].length - 3);
-                if ((Date.parse(_end) / 1000) < (Date.parse(_start) / 1000)) {
-                    this.$message.error('选择的时间范围有错误, 请返回重新修改.');
-                    return false;
-                }
-                this.singleData.start = _start;
-                this.singleData.end = _end;
             },
             getNowDate() {
                 let totalDate = new Date();
@@ -499,7 +426,6 @@
                 this.modifyIndex = index;
                 this.modifySingleData = true;
                 this.modifyDateTimeValue = [];
-                this.modifySingle.domain = this.tableData[index].domain;
                 this.modifySingle.start = this.tableData[index].start;
                 this.modifySingle.end = this.tableData[index].end;
                 this.modifyDateTimeValue[0] = this.tableData[index].start;
@@ -507,47 +433,44 @@
             },
             submitModify() {
                 // 提交单条修改
-                let _off = true;
-                if (this.modifySingle.domain === '') {
-                    _off = false;
-                    this.$message.error('域名不能为空!');
+                if (this.modifySingle.start === '') {
+                    this.$message.error('时间范围不允许为空!');
                     return false;
                 }
-                if (!this.domainFormat(this.toTrim(this.modifySingle.domain))) {
-                    _off = false;
-                    this.$message.error('域名格式不正确!');
-                    return false;
-                }
-                if (_off) {
-                    this.$confirm('此操作新修改的域名将会覆盖旧域名, 是否继续?', '提示', {
-                        confirmButtonText: '确定',
-                        cancelButtonText: '取消',
-                        type: 'warning'
-                    }).then(() => {
-                        this.$message.success('修改成功!');
-                        this.tableData[this.modifyIndex].domain = this.modifySingle.domain;
-                        this.tableData[this.modifyIndex].start = this.modifySingle.start;
-                        this.tableData[this.modifyIndex].end = this.modifySingle.end;
-                        this.modifySingleData = false;
-                    }).catch(() => {
-                        this.$message.info('已取消修改!');
-                    });
-                    return false;
-                }
+                this.$confirm('此操作新修改的时间将会覆盖旧时间, 是否继续?', '提示', {
+                    confirmButtonText: '确定',
+                    cancelButtonText: '取消',
+                    type: 'warning'
+                }).then(() => {
+                    this.$message.success('修改成功!');
+                    this.tableData[this.modifyIndex].start = this.modifySingle.start;
+                    this.tableData[this.modifyIndex].end = this.modifySingle.end;
+                    this.modifySingleData = false;
+                }).catch(() => {
+                    this.$message.info('已取消修改!');
+                });
+                return false;
             },
             modifyDateTimeChange(value) {
-                let _arr = value.split(' ');
-                let _start = _arr[0] + ' ' + _arr[1].substring(0, _arr[1].length - 3);
-                let _end = _arr[3] + ' ' + _arr[4].substring(0, _arr[4].length - 3);
-                if ((Date.parse(_end) / 1000) < (Date.parse(_start) / 1000)) {
-                    this.$message.error('选择的时间范围有错误, 请返回重新修改.');
-                    this.modifyDateTimeValue = [];
-                    this.modifyDateTimeValue[0] = this.modifySingle.start;
-                    this.modifyDateTimeValue[1] = this.modifySingle.end;
-                    return false;
+                if (value) {
+                    let _arr = value.split(' ');
+                    let _start = _arr[0] + ' ' + _arr[1].substring(0, _arr[1].length - 3);
+                    let _end = _arr[3] + ' ' + _arr[4].substring(0, _arr[4].length - 3);
+                    if ((Date.parse(_end) / 1000) < (Date.parse(_start) / 1000)) {
+                        this.$message.error('选择的时间范围有错误, 请返回重新修改.');
+                        this.modifyDateTimeValue = [];
+                        this.modifyDateTimeValue[0] = this.modifySingle.start;
+                        this.modifyDateTimeValue[1] = this.modifySingle.end;
+                        return false;
+                    }
+                    this.modifySingle.start = _start;
+                    this.modifySingle.end = _end;
+                } else {
+                    this.modifySingle = {
+                        start: '',
+                        end: ''
+                    };
                 }
-                this.modifySingle.start = _start;
-                this.modifySingle.end = _end;
             },
             removeDomainConfigure(index, row) {
                 // 删除单条配置信息数据
@@ -588,7 +511,6 @@
                         }
                     }
                 };
-                //console.dir(_that.uploadTextValue);
                 reader.readAsText(file.raw);
             }
         }
@@ -598,6 +520,14 @@
 <style lang="scss">
     .domain-configure {
         padding: 30px;
+        p {
+            margin: 0;
+            padding: 0;
+        }
+        .ibagese, .ipsgase {
+            text-align: center;
+            cursor: pointer;
+        }
     }
     .el-dialog__body {
         p {

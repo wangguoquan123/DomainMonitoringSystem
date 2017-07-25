@@ -12,7 +12,6 @@
                         <div class="icon"></div>
                         <div class="text">
                             <p>{{ $t('User login') }}</p>
-                            <p>Backend Of DeepShift</p>
                         </div>
                     </div>
                 </div>
@@ -30,7 +29,7 @@
                             <el-checkbox v-model="rememberPassword">{{ $t('Remember password') }}</el-checkbox>
                         </el-form-item>
                         <el-form-item class="login-btn-group">
-                            <el-button type="primary" class="login-btn" @click="handleSubmit('loginForm')">{{ $t('Logon immediately') }}</el-button>
+                            <el-button type="primary" class="login-btn" @click="handleSubmit('loginForm')" :loading="loginStatus">{{ $t('Logon immediately') }}</el-button>
                         </el-form-item>
                     </el-form>
                 </div>
@@ -75,6 +74,7 @@
             };
             return {
                 lang: '',
+                loginStatus: false,
                 contentHeight: 0,
                 rememberPassword: false,
                 loginForm: {
@@ -103,6 +103,7 @@
                 let _that = this;
                 _that.$refs[name].validate((valid) => {
                     if (valid) {
+                        _that.loginStatus = true;
                         if (_that.rememberPassword) {
                             window.localStorage.setItem('userInfo', '');
                             window.localStorage.setItem('userInfo', JSON.stringify({
@@ -111,15 +112,19 @@
                             }));
                         }
                         _that.$http.post('http://172.16.12.7:8080/login', this.loginForm).then(response => {
-                            _that.$message(_that.$t('Login successful'));
-                            console.log(response);
+                            _that.$message.success(_that.$t('Login successful'));
+                            setTimeout(function() {
+                                _that.$goRoute('/panel/show');
+                                _that.$store.commit('menuActive', '1-1');
+                                window.localStorage.setItem('activeId', '1-1');
+                                if (!window.localStorage.getItem('scrftoken')) {
+                                    window.localStorage.setItem('scrftoken', response.headers.map.Token[0]);
+                                }
+                            }, 2000);
                         }).catch(error => {
-                            console.log(error);
+                            _that.loginStatus = false;
+                            _that.$message.error(_that.$t(error.body));
                         });
-//                        setTimeout(function() {
-//                            window.localStorage.setItem('activeId', '1-1');
-//                            _that.$router.push('/panel/show');
-//                        }, 2000);
                     } else {
                         _that.$message('您输入的用户名或密码错误!');
                     }
@@ -131,9 +136,15 @@
             },
             isAutoFill() {
                 let _userInfo = JSON.parse(window.localStorage.getItem('userInfo'));
+                let _csrftoken = window.localStorage.getItem('scrftoken');
                 if (_userInfo) {
-                    this.loginForm.user = _userInfo.name;
+                    this.loginForm.user = _userInfo.user;
                     this.loginForm.password = _userInfo.password;
+                }
+                if (_userInfo && _csrftoken) {
+                    this.$goRoute('/panel/show');
+                    this.$store.commit('menuActive', '1-1');
+                    window.localStorage.setItem('activeId', '1-1');
                 }
             }
         },

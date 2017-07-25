@@ -29,19 +29,66 @@
                 style="width: 100%">
             <el-table-column type="selection" width="42"></el-table-column>
             <el-table-column
-                prop="date"
-                sortable
-                label="时间">
+                    prop="Time"
+                    sortable
+                    label="时间">
             </el-table-column>
             <el-table-column
-                prop="name"
-                sortable
-                label="名称">
+                    prop="Domain"
+                    sortable
+                    label="域名">
             </el-table-column>
             <el-table-column
-                prop="address"
-                sortable
-                label="地址">
+                    prop="LocalDnsAddr"
+                    sortable
+                    label="DNS地址">
+                <!--<template scope="scope">-->
+                <!--<div v-for="(item, index) in scope.row.LocalDnsAddr">-->
+                <!--<p  v-if='isShow'>{{ index < 2 ? item : ''}}</p>-->
+                <!--<p  v-else>{{ item }}</p>-->
+                <!--</div>-->
+                <!--<p class="ibagese" @click='ipsToggles' v-if='scope.row.LocalDnsAddr.length>2'><i class="fa" :class='[isShow ? faChevronDown : faChevronUp]'></i></p>-->
+                <!--</template>-->
+            </el-table-column>
+            <el-table-column
+                    prop="Ips"
+                    sortable
+                    label="IPS">
+                <!--<template scope="scope">-->
+                <!--<div v-for='(item, index) in scope.row.Ips'>-->
+                <!--<p  v-if='ipsShow'>{{ index < 2 ? item : ''}}</p>-->
+                <!--<p  v-else>{{ item }}</p>-->
+                <!--</div>-->
+                <!--<p class="ipsgase" @click='ipstoToggles' v-if='scope.row.Ips.length>2'><i class="fa" :class='[ipsShow ? ips_faChevronDown : ips_faChevronUp]'></i></p>-->
+                <!--</template>-->
+            </el-table-column>
+            <el-table-column
+                    prop="FinishCname"
+                    sortable
+                    label="CNAME">
+            </el-table-column>
+            <el-table-column
+                    prop="CnameList"
+                    sortable
+                    label="CNAME_LIST">
+            </el-table-column>
+            <el-table-column
+                    prop="Status"
+                    sortable
+                    label="Status"
+                    :filters="[{ text: '正常', value: 0 }, { text: '异常', value: 1 }]"
+                    :filter-method="filterTag"
+                    filter-placement="bottom-end">
+                <template scope="scope">
+                    <el-tag
+                            :type="scope.row.Status === 0 ? 'success' : 'danger'"
+                            close-transition>{{ scope.row.Status === 0 ? '正常' : '异常' }}</el-tag>
+                </template>
+            </el-table-column>
+            <el-table-column
+                    prop="Err"
+                    sortable
+                    label="Error">
             </el-table-column>
         </data-tables>
     </div>
@@ -59,68 +106,7 @@
                 lang: '',
                 radio: 1,
                 domainInput: '',
-                tableData: [
-                    {
-                        date: '2016-05-02',
-                        name: '王小虎',
-                        address: '上海市普陀区金沙江路 1518 弄'
-                    },
-                    {
-                        date: '2016-05-04',
-                        name: '王小虎',
-                        address: '上海市普陀区金沙江路 1517 弄'
-                    },
-                    {
-                        date: '2016-05-01',
-                        name: '王小虎',
-                        address: '上海市普陀区金沙江路 1519 弄'
-                    },
-                    {
-                        date: '2016-05-03',
-                        name: '王小虎',
-                        address: '上海市普陀区金沙江路 1516 弄'
-                    },
-                    {
-                        date: '2016-05-05',
-                        name: '王小虎',
-                        address: '上海市普陀区金沙江路 1521 弄'
-                    },
-                    {
-                        date: '2016-05-06',
-                        name: '王小虎',
-                        address: '上海市普陀区金沙江路 153 弄'
-                    },
-                    {
-                        date: '2016-05-07',
-                        name: '王小虎',
-                        address: '上海市普陀区金沙江路 1545 弄'
-                    },
-                    {
-                        date: '2016-05-08',
-                        name: '王小虎',
-                        address: '上海市普陀区金沙江路 1588 弄'
-                    },
-                    {
-                        date: '2016-05-09',
-                        name: '王小虎',
-                        address: '上海市普陀区金沙江路 1562 弄'
-                    },
-                    {
-                        date: '2016-05-10',
-                        name: '王小虎',
-                        address: '上海市普陀区金沙江路 15245 弄'
-                    },
-                    {
-                        date: '2016-05-11',
-                        name: '王小虎',
-                        address: '上海市普陀区金沙江路 15666 弄'
-                    },
-                    {
-                        date: '2016-05-12',
-                        name: '王小虎',
-                        address: '上海市普陀区金沙江路 158888 弄'
-                    }
-                ],
+                tableData: [],
                 searchObj: {
                     placeholder: '请输入搜索关键字',
                     offset:20,
@@ -137,6 +123,7 @@
             } else if (this.lang.locale === 'cn') {
                 locale.use(zhLang);
             }
+            this.getData();
         },
         updated() {
             let _date_input = document.getElementsByClassName('query-tool')[0].getElementsByTagName('input')[0];
@@ -167,6 +154,17 @@
                     pageSizes: [10, 20, 50,100],
                     currentPage: 1
                 }
+            },
+            getData() {
+                let _that = this;
+                //let _newDate = _that.getNowDate();
+                _that.$http.post('http://172.16.12.7:8080/display').then(response => {
+                    _that.tableData = response.body;
+                    console.log(_that.tableData);
+                }).catch(error => {
+                    _that.$message.error(error.bodyText);
+                    _that.tableData = [];
+                });
             }
         }
     }
