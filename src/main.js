@@ -79,6 +79,21 @@ const i18n = new VueI18n({
     messages: i18ns // set locale i18ns
 });
 
+Vue.filter('convertDate', function(value) {
+    let _old  = new Date(value * 60 * 1000);
+    let _year = _old.getFullYear();
+    let _month = _old.getMonth();
+    _month = _month < 10 ? '0' + _month : _month;
+    let _date = _old.getDate();
+    _date = _date < 10 ? '0' + _date : _date;
+    let _hour = _old.getHours();
+    _hour = _hour < 10 ? '0' + _hour : _hour;
+    let _minute = _old.getMinutes();
+    _minute = _minute < 10 ? '0' + _minute : _minute;
+    let _new = _year + '-' + _month + '-' + _date + ' ' + _hour + ':' + _minute;
+    return _new;
+});
+
 /* eslint-disable no-new */
 new Vue({
     el: '#app',

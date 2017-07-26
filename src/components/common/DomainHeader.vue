@@ -126,7 +126,7 @@
                     width: 140px;
                     background-color: #219cea;
                     border-radius: 0 0 6px 6px;
-                    z-index: 99;
+                    z-index: 22222;
                     .user-item {
                         padding: 0 10px;
                         border-top: 1px solid #eae9e9;

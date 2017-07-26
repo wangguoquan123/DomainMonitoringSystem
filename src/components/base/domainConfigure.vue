@@ -20,18 +20,61 @@
         <span class="border-style"></span>
         <el-button type="info" @click="handleDownload('selectRow')" :disabled="selectRow.length === 0">导出所选</el-button>
         <el-button type="info" @click="handleDownload">导出全部</el-button>
-        <data-tables
-                :data="tableData"
-                @selection-change="handleSelectionChange"
-                @row-click="rowClickChange"
-                :has-action-col='false'
-                :search-def="searchObj"
-                :data-type="getSearchText(lang.locale)"
-                :pagination-def='getPaginationDef()'
-                stripe
-                border
-                fit
-                style="width: 100%">
+        <span class="border-style"></span>
+        <el-button type="primary" @click="submitAll">提交</el-button>
+        <!--<data-tables-->
+                <!--:data="tableData"-->
+                <!--@selection-change="handleSelectionChange"-->
+                <!--@row-click="rowClickChange"-->
+                <!--:has-action-col='false'-->
+                <!--:search-def="searchObj"-->
+                <!--:data-type="getSearchText(lang.locale)"-->
+                <!--:pagination-def='getPaginationDef()'-->
+                <!--stripe-->
+                <!--border-->
+                <!--fit-->
+                <!--style="width: 100%">-->
+            <!--<el-table-column type="selection" width="42"></el-table-column>-->
+            <!--<el-table-column-->
+                <!--prop="domain"-->
+                <!--sortable-->
+                <!--label="域名">-->
+            <!--</el-table-column>-->
+            <!--<el-table-column-->
+                <!--prop="start"-->
+                <!--sortable-->
+                <!--label="起始时间">-->
+            <!--</el-table-column>-->
+            <!--<el-table-column-->
+                <!--prop="end"-->
+                <!--sortable-->
+                <!--label="结束时间">-->
+            <!--</el-table-column>-->
+            <!--<el-table-column-->
+                <!--label="操作"-->
+                <!--sortable="custom">-->
+                <!--<template scope="scope">-->
+                    <!--<el-button-->
+                        <!--size='mini'-->
+                        <!--type='primary'-->
+                        <!--@click="modifyDomainConfigure(scope.$index, scope.row)"><i class="fa fa-undo fa-sm"></i>修改时间</el-button>-->
+                    <!--<el-button-->
+                        <!--size='mini'-->
+                        <!--type='danger'-->
+                        <!--@click="removeDomainConfigure(scope.$index, scope.row)"><i class="fa fa-trash-o fa-sm"></i>删除</el-button>-->
+                <!--</template>-->
+            <!--</el-table-column>-->
+        <!--</data-tables>-->
+
+
+        <el-table
+            :data="tableData"
+            :style="{ 'height': tableHeight }"
+            :default-sort = "{prop: 'Time', order: 'descending'}"
+            stripe
+            border
+            highlight-current-row
+            style="width: 100%">
             <el-table-column type="selection" width="42"></el-table-column>
             <el-table-column
                 prop="domain"
@@ -39,30 +82,41 @@
                 label="域名">
             </el-table-column>
             <el-table-column
-                prop="start"
+                prop="begin"
                 sortable
                 label="起始时间">
+                <template scope="scope">
+                    <span>{{ scope.row.begin | convertDate }}</span>
+                    <!--<span ref="statussss">{{ getStatus(scope.row.Status) }}</span>-->
+                </template>
             </el-table-column>
             <el-table-column
                 prop="end"
                 sortable
-                label="结束时间">
+                label="终止时间">
+                <template scope="scope">
+                    <span>{{ scope.row.end | convertDate }}</span>
+                    <!--<span ref="statussss">{{ getStatus(scope.row.Status) }}</span>-->
+                </template>
             </el-table-column>
             <el-table-column
                 label="操作"
                 sortable="custom">
-                <template scope="scope">
-                    <el-button
-                        size='mini'
-                        type='primary'
-                        @click="modifyDomainConfigure(scope.$index, scope.row)"><i class="fa fa-undo fa-sm"></i>修改时间</el-button>
-                    <el-button
-                        size='mini'
-                        type='danger'
-                        @click="removeDomainConfigure(scope.$index, scope.row)"><i class="fa fa-trash-o fa-sm"></i>删除</el-button>
+            <template scope="scope">
+                <el-button
+                    size='mini'
+                    type='primary'
+                    @click="modifyDomainConfigure(scope.$index, scope.row)"><i class="fa fa-undo fa-sm"></i>修改时间</el-button>
+                <el-button
+                    size='mini'
+                    type='danger'
+                    @click="removeDomainConfigure(scope.$index, scope.row)"><i class="fa fa-trash-o fa-sm"></i>删除</el-button>
                 </template>
             </el-table-column>
-        </data-tables>
+        </el-table>
+
+
+
         <el-dialog title="批量添加" :visible.sync="dialogTableVisible" size="tiny">
             <p>
                 <i class="fa fa-exclamation-circle"></i>
@@ -131,9 +185,10 @@
                 isFinish: true,
                 value: '',
                 lang: '',
+                tableHeight: '',
                 dialogDateTimeValue: [],
                 dialogTimeValue: {
-                    start: '',
+                    begin: '',
                     end: ''
                 },
                 isShow: true,
@@ -142,58 +197,7 @@
                 ipsShow: true,
                 ips_faChevronDown: 'fa-chevron-down',
                 ips_faChevronUp: 'fa-chevron-up',
-                tableData: [
-                    {
-                        domain: 'www.baidu.com',
-                        start: '2017-05-10 10:21',
-                        end: '2017-05-12 09:33'
-                    },
-                    {
-                        domain: 'www.qq.com',
-                        start: '2017-01-12 02:21',
-                        end: '2017-01-13 02:33'
-                    },
-                    {
-                        domain: 'baidu.com',
-                        start: '2017-04-16 10:21',
-                        end: '2017-04-18 10:33'
-                    },
-                    {
-                        domain: 'www.sina.com',
-                        start: '2017-04-14 02:03',
-                        end: '2017-04-16 02:14'
-                    },
-                    {
-                        domain: 'www.pconline.com.cn',
-                        start: '2017-03-17 03:27',
-                        end: '2017-03-18 03:32'
-                    },
-                    {
-                        domain: 'www.element.com',
-                        start: '2017-03-28 12:32',
-                        end: '2017-05-12 13:02'
-                    },
-                    {
-                        domain: 'www.ifeng.com',
-                        start: '2017-05-14 05:19',
-                        end: '2017-05-16 05:23'
-                    },
-                    {
-                        domain: 'www.163.com',
-                        start: '2017-04-27 11:01',
-                        end: '2017-04-30 18:03'
-                    },
-                    {
-                        domain: 'www.youku.com',
-                        start: '2017-06-15 17:33',
-                        end: '2017-07-01 18:34'
-                    },
-                    {
-                        domain: 'www.suning.com',
-                        start: '2017-08-20 04:33',
-                        end: '2017-08-22 06:44'
-                    }
-                ],
+                tableData: [],
                 searchObj: {
                     placeholder: '',
                     offset:20,
@@ -203,11 +207,11 @@
                 selectRow: [],
                 dialogModifyDate: [],
                 modifyData: {
-                    start: '',
+                    begin: '',
                     end: ''
                 },
                 modifySingle: {
-                    start: '',
+                    begin: '',
                     end: ''
                 },
                 modifyDateTimeValue: [],
@@ -222,15 +226,19 @@
             } else if (this.lang.locale === 'cn') {
                 locale.use(zhLang);
             }
+            let _this = this;
+            _this.updateHeight();
+            window.addEventListener('resize', () => {_this.updateHeight()});
             let _dateObj = this.getNowDate();
-            this.dialogDateTimeValue[0] = _dateObj.startDate;
-            this.dialogDateTimeValue[1] = _dateObj.endDate;
-            this.dialogTimeValue.start = _dateObj.startDate.substring(0, _dateObj.startDate.length - 3);
-            this.dialogTimeValue.end = _dateObj.endDate.substring(0, _dateObj.endDate.length - 3);
-            this.dialogModifyDate[0] = _dateObj.startDate;
-            this.dialogModifyDate[1] = _dateObj.endDate;
-            this.modifyData.start = _dateObj.startDate.substring(0, _dateObj.startDate.length - 3);
-            this.modifyData.end = _dateObj.endDate.substring(0, _dateObj.endDate.length - 3);
+            _this.dialogDateTimeValue[0] = _dateObj.start;
+            _this.dialogDateTimeValue[1] = _dateObj.end;
+            _this.dialogTimeValue.begin = _dateObj.start;
+            _this.dialogTimeValue.end = _dateObj.end;
+            _this.dialogModifyDate[0] = _dateObj.start;
+            _this.dialogModifyDate[1] = _dateObj.end;
+            _this.modifyData.begin = _dateObj.start;
+            _this.modifyData.end = _dateObj.end;
+            _this.getData();
         },
         methods: {
             ipsToggles() {
@@ -252,6 +260,10 @@
             rowClickChange(row, index, arr){
                 //console.log(row, index, arr);
             },
+            updateHeight () {
+                let sideHeight = document.documentElement.clientHeight || document.body.clientHeight;
+                this.tableHeight = (sideHeight - 60) + 'px';
+            },
             getSearchText(value) {
                 let _inputSearch = document.getElementsByClassName('el-input__inner')[0];
                 this.toText = value;
@@ -261,17 +273,9 @@
                     _inputSearch.setAttribute('placeholder', '请输入搜索关键字');
                 }
             },
-            getPaginationDef(){
-                return {
-                    layout: 'total, prev, pager, next, jumper, sizes',
-                    pageSize: 8,
-                    pageSizes: [8, 20, 50, 100],
-                    currentPage: 1
-                }
-            },
             dialogDateTimeChange(value) {
                 if (value === '') {
-                    this.dialogTimeValue.start = '';
+                    this.dialogTimeValue.begin = '';
                     this.dialogTimeValue.end = '';
                     return false;
                 }
@@ -282,11 +286,11 @@
                     this.$message.error('请设置域名的起始、结束日期段.');
                     return false;
                 }
-                this.dialogTimeValue.start = _start;
+                this.dialogTimeValue.begin = _start;
                 this.dialogTimeValue.end = _end;
             },
             submitConfig() {
-                if (this.dialogTimeValue.start === '') {
+                if (this.dialogTimeValue.begin === '') {
                     this.$message.error('请设置域名的起始、结束日期段.');
                     return false;
                 }
@@ -303,7 +307,7 @@
                     if (this.domainFormat(this.toTrim(_newValue[i]))) {
                         _arr.push({
                             domain: this.toTrim(_newValue[i]),
-                            start: this.dialogTimeValue.start,
+                            begin: this.dialogTimeValue.begin,
                             end: this.dialogTimeValue.end
                         });
                     } else {
@@ -350,20 +354,36 @@
                 // 点击上传文件
                 this.$refs.fileUpload.submit();
             },
-            getNowDate() {
-                let totalDate = new Date();
+            getNowDate(value) {
+                let totalDate = '';
+                if (value) {
+                    console.log(11111);
+                    totalDate = new Date(value);
+                } else {
+                    console.log(2222);
+                    totalDate = new Date();
+                }
+                console.log(totalDate);
                 let year = totalDate.getFullYear();
-                let month = totalDate.getMonth() < 10 ? '0' + (totalDate.getMonth() + 1) : totalDate.getMonth() + 1;
+                let month = totalDate.getMonth();
+                month = month < 10 ? '0' + month : month;
                 let date = totalDate.getDate();
-                let hour = totalDate.getHours() < 10 ? '0' + totalDate.getHours() : totalDate.getHours();
-                let minute = totalDate.getMinutes() < 10 ? '0' + totalDate.getMinutes() : totalDate.getMinutes();
-                let second = totalDate.getSeconds() < 10 ? '0' + totalDate.getSeconds() : totalDate.getSeconds();
-                let startDate = year + '-' + month + '-' + (date - 1) + ' ' + hour + ':' + minute + ':' + second;
-                let endDate = year + '-' + month + '-' + date + ' ' + hour + ':' + minute + ':' + second;
-                return {
-                    startDate: startDate,
-                    endDate: endDate
-                };
+                date = date < 10 ? '0' + date : date;
+                let hour = totalDate.getHours();
+                hour = hour < 10 ? '0' + hour : hour;
+                let minute = totalDate.getMinutes();
+                minute = minute < 10 ? '0' + minute : minute;
+                //console.log(totalDate, year, month, date, hour, minute);
+                let start = year + '-' + month + '-' + (date - 1) + ' ' + hour + ':' + minute;
+                let end = year + '-' + month + '-' + date + ' ' + hour + ':' + minute;
+                if (value) {
+                    return end;
+                } else {
+                    return {
+                        start: start,
+                        end: end
+                    };
+                }
             },
             removeSelectData() {
                 let _that = this;
@@ -389,7 +409,7 @@
                 for (let i = 0, len = this.selectRow.length; i < len; i ++) {
                     for (let k = 0, len = this.tableData.length; k < len; k ++) {
                         if (this.selectRow[i].domain === this.tableData[k].domain) {
-                            this.tableData[k].start = this.modifyData.start;
+                            this.tableData[k].begin = this.modifyData.begin;
                             this.tableData[k].end = this.modifyData.end;
                         }
                     }
@@ -404,15 +424,15 @@
                     this.$message.error('选择的时间范围有错误, 请返回重新修改.');
                     return false;
                 }
-                this.modifyData.start = _start;
+                this.modifyData.begin = _start;
                 this.modifyData.end = _end;
             },
             handleDownload(type) {
                 let _that = this;
                 require.ensure([], () => {
                     const { export_json_to_excel } = require('vendor/Export2Excel');
-                    const tHeader = ['域名', '起始时间', '结束时间'];
-                    const filterVal = ['domain', 'start', 'end'];
+                    const tHeader = ['域名', '起始时间', '终止时间'];
+                    const filterVal = ['domain', 'begin', 'end'];
                     const data = _that.formatJson(filterVal, type === 'selectRow' ? _that.selectRow : _that.tableData);
                     export_json_to_excel(tHeader, data, 'table数据');
                 })
@@ -426,14 +446,15 @@
                 this.modifyIndex = index;
                 this.modifySingleData = true;
                 this.modifyDateTimeValue = [];
-                this.modifySingle.start = this.tableData[index].start;
-                this.modifySingle.end = this.tableData[index].end;
-                this.modifyDateTimeValue[0] = this.tableData[index].start;
-                this.modifyDateTimeValue[1] = this.tableData[index].end;
+                //this.modifySingle.begin = this.getNowDate(this.tableData[index].begin);
+                //this.modifySingle.end = this.getNowDate(this.tableData[index].end);
+                console.log(this.tableData[index]);
+                this.modifyDateTimeValue[0] = this.getNowDate(this.tableData[index].begin);
+                //this.modifyDateTimeValue[1] = this.getNowDate(this.tableData[index].end);
             },
             submitModify() {
                 // 提交单条修改
-                if (this.modifySingle.start === '') {
+                if (this.modifySingle.begin === '') {
                     this.$message.error('时间范围不允许为空!');
                     return false;
                 }
@@ -443,7 +464,7 @@
                     type: 'warning'
                 }).then(() => {
                     this.$message.success('修改成功!');
-                    this.tableData[this.modifyIndex].start = this.modifySingle.start;
+                    this.tableData[this.modifyIndex].begin = this.modifySingle.begin;
                     this.tableData[this.modifyIndex].end = this.modifySingle.end;
                     this.modifySingleData = false;
                 }).catch(() => {
@@ -459,15 +480,15 @@
                     if ((Date.parse(_end) / 1000) < (Date.parse(_start) / 1000)) {
                         this.$message.error('选择的时间范围有错误, 请返回重新修改.');
                         this.modifyDateTimeValue = [];
-                        this.modifyDateTimeValue[0] = this.modifySingle.start;
+                        this.modifyDateTimeValue[0] = this.modifySingle.begin;
                         this.modifyDateTimeValue[1] = this.modifySingle.end;
                         return false;
                     }
-                    this.modifySingle.start = _start;
+                    this.modifySingle.begin = _start;
                     this.modifySingle.end = _end;
                 } else {
                     this.modifySingle = {
-                        start: '',
+                        begin: '',
                         end: ''
                     };
                 }
@@ -507,11 +528,38 @@
                             _that.uploadTextValue.push(_obj);
                         } else {
                             _obj.domain = _arr[i].domain;
-                            _obj.start = _arr[i].start;
+                            _obj.begin = _arr[i].begin;
                         }
                     }
                 };
                 reader.readAsText(file.raw);
+            },
+            submitAll() {
+
+            },
+            getData() {
+                let _that = this;
+                _that.$http.post('http://172.16.12.7:8080/domain_show').then(response => {
+                    //console.log(response);
+                    _that.tableData = response.body;
+//                    if (response.body === null) {
+//                        _that.abnormalStatus = true;
+//                        _that.inputStatus = true;
+//                    } else {
+//                        _that.abnormalStatus = false;
+//                        _that.inputStatus = false;
+//                    }
+                  _that.$store.commit('loadingActive', false);
+                }).catch(error => {
+                    _that.$message.error(error.bodyText);
+//                    _that.abnormalStatus = true;
+//                    _that.inputStatus = true;
+//                    _that.tableData = [];
+                });
+            },
+            jsonConvertArray(value) {
+                let _arr = JSON.parse(value);
+                return _arr;
             }
         }
     }
@@ -527,6 +575,12 @@
         .ibagese, .ipsgase {
             text-align: center;
             cursor: pointer;
+        }
+        .el-table {
+            overflow: auto;
+            tr {
+                cursor: pointer;
+            }
         }
     }
     .el-dialog__body {

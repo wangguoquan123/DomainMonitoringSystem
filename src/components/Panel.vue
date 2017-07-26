@@ -3,7 +3,7 @@
         <domain-header></domain-header>
         <domain-sidebar></domain-sidebar>
         <el-row class="contents" :style="{ 'margin-left': slidebarStatic ? '200px' : '60px' }">
-            <el-col :span="24" class="customer_contents" v-loading.body='false'>
+            <el-col :span="24" class="customer_contents" v-loading.body="loading">
                 <domain-bar></domain-bar>
                 <router-view></router-view>
             </el-col>
@@ -35,6 +35,9 @@
         computed: {
             slidebarStatic() {
                 return this.$store.state.navStatus;
+            },
+            loading() {
+                return this.$store.state.loadingStatus;
             }
         }
     }

@@ -5,9 +5,13 @@
 </template>
 
 <script>
-export default {
-  name: 'app'
-}
+    export default {
+        name: 'app',
+        props: [],
+        methods: {
+
+        }
+    }
 </script>
 
 <style></style>

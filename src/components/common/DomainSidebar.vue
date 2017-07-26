@@ -74,7 +74,7 @@
         methods: {
             updateHeight () {
                 let sideHeight = document.documentElement.clientHeight || document.body.clientHeight;
-                this.side_height = sideHeight + 'px';
+                this.side_height = (sideHeight - 92) + 'px';
             },
             selectItem(value) {
                 this.$goRoute(menuMap[value]);

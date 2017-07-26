@@ -10,7 +10,8 @@ export default new Vuex.Store({
             one: '',
             two: ''
         },
-        navStatus: true
+        navStatus: true,
+        loadingStatus: true
     },
     mutations: {
         menuActive(state, active) {
@@ -22,6 +23,9 @@ export default new Vuex.Store({
         },
         navToggleActive(state, active) {
             state.navStatus = active;
+        },
+        loadingActive(state, active) {
+            state.loadingStatus = active;
         }
     }
 })
