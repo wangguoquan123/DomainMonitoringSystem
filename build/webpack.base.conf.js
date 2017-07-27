@@ -24,6 +24,7 @@ module.exports = {
       'vue$': 'vue/dist/vue.esm.js',
       '@': resolve('src'),
       'vendor': path.resolve(__dirname, '../src/vendor'),
+      'XLSX': path.resolve(__dirname, './dist/cpexcel.js')
     }
   },
   module: {

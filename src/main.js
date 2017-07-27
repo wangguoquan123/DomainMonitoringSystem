@@ -13,6 +13,7 @@ import verify from 'vue-verify-plugin/src/verify';
 import elementUI from 'element-ui';
 import 'element-ui/lib/theme-default/index.css'
 import store from '@/vuex/store.js'
+// import 'xlsx/dist/jszip.js'
 
 Vue.use(VueRouter);
 Vue.use(VueI18n);
@@ -20,6 +21,7 @@ Vue.use(verify);
 Vue.use(VueResource);
 Vue.use(elementUI);
 Vue.use(DataTables);
+// Vue.use(XLSX);
 
 const router = new VueRouter({
     routes

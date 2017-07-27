@@ -1,72 +1,28 @@
 <template>
     <div class="domain-configure">
-        <el-button type="primary" @click="ShowModel">批量添加</el-button>
-        <span class="border-style"></span>
-        <el-upload
+        <div class="button-group" style="padding-bottom: 25px;">
+            <el-button type="primary" @click="ShowModel">批量添加</el-button>
+            <span class="border-style"></span>
+            <el-upload
                 class="upload-demo"
                 action="https://jsonplaceholder.typicode.com/posts/"
-                accept="text"
-                :auto-upload="false"
+                accept="xlsx"
+                :auto-upload="true"
                 :show-file-list="false"
                 :on-change="fileChangeUpload"
                 ref="fileUpload"
                 style="display: inline-block;">
-            <el-button slot="trigger" type="primary">导入</el-button>
-            <el-button style="margin-left: 10px;" type="success" @click="submitUpload" :disabled="isFinish">开始上传</el-button>
-        </el-upload>
-        <span class="border-style"></span>
-        <el-button type="danger" @click="removeSelectData" :disabled="selectRow.length === 0">删除</el-button>
-        <el-button type="primary" :disabled="selectRow.length === 0" @click="dialogModifyData = true;">修改</el-button>
-        <span class="border-style"></span>
-        <el-button type="info" @click="handleDownload('selectRow')" :disabled="selectRow.length === 0">导出所选</el-button>
-        <el-button type="info" @click="handleDownload">导出全部</el-button>
-        <span class="border-style"></span>
-        <el-button type="primary" @click="submitAll">提交</el-button>
-        <!--<data-tables-->
-                <!--:data="tableData"-->
-                <!--@selection-change="handleSelectionChange"-->
-                <!--@row-click="rowClickChange"-->
-                <!--:has-action-col='false'-->
-                <!--:search-def="searchObj"-->
-                <!--:data-type="getSearchText(lang.locale)"-->
-                <!--:pagination-def='getPaginationDef()'-->
-                <!--stripe-->
-                <!--border-->
-                <!--fit-->
-                <!--style="width: 100%">-->
-            <!--<el-table-column type="selection" width="42"></el-table-column>-->
-            <!--<el-table-column-->
-                <!--prop="domain"-->
-                <!--sortable-->
-                <!--label="域名">-->
-            <!--</el-table-column>-->
-            <!--<el-table-column-->
-                <!--prop="start"-->
-                <!--sortable-->
-                <!--label="起始时间">-->
-            <!--</el-table-column>-->
-            <!--<el-table-column-->
-                <!--prop="end"-->
-                <!--sortable-->
-                <!--label="结束时间">-->
-            <!--</el-table-column>-->
-            <!--<el-table-column-->
-                <!--label="操作"-->
-                <!--sortable="custom">-->
-                <!--<template scope="scope">-->
-                    <!--<el-button-->
-                        <!--size='mini'-->
-                        <!--type='primary'-->
-                        <!--@click="modifyDomainConfigure(scope.$index, scope.row)"><i class="fa fa-undo fa-sm"></i>修改时间</el-button>-->
-                    <!--<el-button-->
-                        <!--size='mini'-->
-                        <!--type='danger'-->
-                        <!--@click="removeDomainConfigure(scope.$index, scope.row)"><i class="fa fa-trash-o fa-sm"></i>删除</el-button>-->
-                <!--</template>-->
-            <!--</el-table-column>-->
-        <!--</data-tables>-->
-
-
+                <el-button slot="trigger" type="primary">导入Excel</el-button>
+            </el-upload>
+            <span class="border-style"></span>
+            <el-button type="danger" @click="removeSelectData" :disabled="selectRow.length === 0">删除</el-button>
+            <el-button type="primary" :disabled="selectRow.length === 0" @click="dialogModifyData = true;">修改</el-button>
+            <span class="border-style"></span>
+            <el-button type="info" @click="handleDownload('selectRow')" :disabled="selectRow.length === 0">导出所选</el-button>
+            <el-button type="info" @click="handleDownload">导出全部</el-button>
+            <span class="border-style"></span>
+            <el-button type="primary" @click="submitAll" :loading="submitAllStatus">提交更改</el-button>
+        </div>
         <el-table
             :data="tableData"
             :style="{ 'height': tableHeight }"
@@ -74,7 +30,8 @@
             stripe
             border
             highlight-current-row
-            style="width: 100%">
+            style="width: 100%"
+            @selection-change="handleSelectionChange">
             <el-table-column type="selection" width="42"></el-table-column>
             <el-table-column
                 prop="domain"
@@ -87,7 +44,6 @@
                 label="起始时间">
                 <template scope="scope">
                     <span>{{ scope.row.begin | convertDate }}</span>
-                    <!--<span ref="statussss">{{ getStatus(scope.row.Status) }}</span>-->
                 </template>
             </el-table-column>
             <el-table-column
@@ -96,7 +52,6 @@
                 label="终止时间">
                 <template scope="scope">
                     <span>{{ scope.row.end | convertDate }}</span>
-                    <!--<span ref="statussss">{{ getStatus(scope.row.Status) }}</span>-->
                 </template>
             </el-table-column>
             <el-table-column
@@ -114,9 +69,6 @@
                 </template>
             </el-table-column>
         </el-table>
-
-
-
         <el-dialog title="批量添加" :visible.sync="dialogTableVisible" size="tiny">
             <p>
                 <i class="fa fa-exclamation-circle"></i>
@@ -215,7 +167,12 @@
                     end: ''
                 },
                 modifyDateTimeValue: [],
-                modifyIndex: ''
+                modifyIndex: '',
+                selectRowIndex: [],
+                submitAllStatus: false,
+                modifyTableLen: 0,
+                rABS: false,
+                completeText: ''
             }
         },
         props: [],
@@ -307,8 +264,8 @@
                     if (this.domainFormat(this.toTrim(_newValue[i]))) {
                         _arr.push({
                             domain: this.toTrim(_newValue[i]),
-                            begin: this.dialogTimeValue.begin,
-                            end: this.dialogTimeValue.end
+                            begin: this.dateStrContent(this.dialogTimeValue.begin),
+                            end: this.dateStrContent(this.dialogTimeValue.end)
                         });
                     } else {
                         if (_newValue[i] === '') {
@@ -337,18 +294,19 @@
                 return _reg.test(str);
             },
             fileChangeUpload(file) {
-                const isTXT = file.raw.type === 'text/plain';
-                const isLt2M = file.size / 1024 / 1024 < 2;
+                //const isTXT = file.raw.type === 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet';
+                //const isLt2M = file.size / 1024 / 1024 < 2;
 
-                if (!isTXT) {
-                    this.$message.error('上传的文件格式只允许 TXT 格式!');
-                    return false;
-                }
-                if (!isLt2M) {
-                    this.$message.error('上传的文件大小不能超过 2MB!');
-                    return false;
-                }
-                return isTXT && isLt2M;
+//                if (!isTXT) {
+//                    this.$message.error('上传的文件格式只允许 XLSX 格式!');
+//                    return false;
+//                }
+//                if (!isLt2M) {
+//                    this.$message.error('上传的文件大小不能超过 2MB!');
+//                    return false;
+//                }
+                this.readUploadFile(file.raw);
+//                return isTXT && isLt2M;
             },
             submitUpload() {
                 // 点击上传文件
@@ -356,14 +314,12 @@
             },
             getNowDate(value) {
                 let totalDate = '';
-                if (value) {
-                    console.log(11111);
+                if (value || value === 0) {
                     totalDate = new Date(value);
                 } else {
-                    console.log(2222);
                     totalDate = new Date();
                 }
-                console.log(totalDate);
+
                 let year = totalDate.getFullYear();
                 let month = totalDate.getMonth();
                 month = month < 10 ? '0' + month : month;
@@ -373,10 +329,9 @@
                 hour = hour < 10 ? '0' + hour : hour;
                 let minute = totalDate.getMinutes();
                 minute = minute < 10 ? '0' + minute : minute;
-                //console.log(totalDate, year, month, date, hour, minute);
                 let start = year + '-' + month + '-' + (date - 1) + ' ' + hour + ':' + minute;
                 let end = year + '-' + month + '-' + date + ' ' + hour + ':' + minute;
-                if (value) {
+                if (value || value === 0) {
                     return end;
                 } else {
                     return {
@@ -386,12 +341,7 @@
                 }
             },
             removeSelectData() {
-                let _that = this;
-                let _arr = [];
-                _that.selectRow.forEach(function(value) {
-                    _arr.push(value.domain);
-                });
-                if (!_arr.length) {
+                if (!this.selectRow.length) {
                     this.$message.error('请选择要删除的数据');
                     return false;
                 }
@@ -400,7 +350,15 @@
                     cancelButtonText: '取消',
                     type: 'warning'
                 }).then(() => {
-                    console.log(_arr);
+                    for (let i = 0, flag = true, len = this.selectRow.length; i < len; flag ? i ++ : i) {
+                        for (let j = 0, len = this.tableData.length; j < len; j ++) {
+                            if (this.selectRow[i].domain === this.tableData[j].domain) {
+                                this.tableData.splice(j, 1);
+                                break;
+                            }
+                        }
+                    }
+                    this.$message.success('删除成功');
                 }).catch(() => {
                     this.$message('已取消删除');
                 });
@@ -409,8 +367,8 @@
                 for (let i = 0, len = this.selectRow.length; i < len; i ++) {
                     for (let k = 0, len = this.tableData.length; k < len; k ++) {
                         if (this.selectRow[i].domain === this.tableData[k].domain) {
-                            this.tableData[k].begin = this.modifyData.begin;
-                            this.tableData[k].end = this.modifyData.end;
+                            this.tableData[k].begin = this.dateStrContent(this.modifyData.begin);
+                            this.tableData[k].end = this.dateStrContent(this.modifyData.end);
                         }
                     }
                 }
@@ -429,11 +387,21 @@
             },
             handleDownload(type) {
                 let _that = this;
+                let _arr = [];
+                let _target = type === 'selectRow' ? _that.selectRow : _that.tableData;
+                for (let i = 0, len = _target.length; i < len; i ++) {
+                    //console.log(_that.dateStrContent(_that.minuteContvert(_target[i].begin)));
+                    _arr.push({
+                        domain: _target[i].domain,
+                        begin: _that.getNowDate(_that.minuteContvert(_target[i].begin)),
+                        end: _that.getNowDate(_that.minuteContvert(_target[i].end))
+                    });
+                }
                 require.ensure([], () => {
                     const { export_json_to_excel } = require('vendor/Export2Excel');
                     const tHeader = ['域名', '起始时间', '终止时间'];
                     const filterVal = ['domain', 'begin', 'end'];
-                    const data = _that.formatJson(filterVal, type === 'selectRow' ? _that.selectRow : _that.tableData);
+                    const data = _that.formatJson(filterVal, _arr);
                     export_json_to_excel(tHeader, data, 'table数据');
                 })
             },
@@ -446,11 +414,17 @@
                 this.modifyIndex = index;
                 this.modifySingleData = true;
                 this.modifyDateTimeValue = [];
-                //this.modifySingle.begin = this.getNowDate(this.tableData[index].begin);
-                //this.modifySingle.end = this.getNowDate(this.tableData[index].end);
-                console.log(this.tableData[index]);
-                this.modifyDateTimeValue[0] = this.getNowDate(this.tableData[index].begin);
-                //this.modifyDateTimeValue[1] = this.getNowDate(this.tableData[index].end);
+                this.modifySingle.begin = this.getNowDate(this.minuteContvert(this.tableData[index].begin));
+                this.modifySingle.end = this.getNowDate(this.minuteContvert(this.tableData[index].end));
+                this.modifyDateTimeValue[0] = this.getNowDate(this.minuteContvert(this.tableData[index].begin));
+                this.modifyDateTimeValue[1] = this.getNowDate(this.minuteContvert(this.tableData[index].end));
+            },
+            minuteContvert(value) {
+                return value * 1000 * 60;
+            },
+            dateStrContent(value) {
+                let _str = new Date(value).getTime() / 1000 / 60;
+                return _str;
             },
             submitModify() {
                 // 提交单条修改
@@ -464,8 +438,8 @@
                     type: 'warning'
                 }).then(() => {
                     this.$message.success('修改成功!');
-                    this.tableData[this.modifyIndex].begin = this.modifySingle.begin;
-                    this.tableData[this.modifyIndex].end = this.modifySingle.end;
+                    this.tableData[this.modifyIndex].begin = this.dateStrContent(this.modifySingle.begin);
+                    this.tableData[this.modifyIndex].end = this.dateStrContent(this.modifySingle.end);
                     this.modifySingleData = false;
                 }).catch(() => {
                     this.$message.info('已取消修改!');
@@ -512,54 +486,115 @@
                     });
                 });
             },
-            readUploadFile(file) {
+            readUploadFile(obj) {
                 let _that = this;
+                if (typeof require !== 'undefined') {
+                    var XLSX = require('xlsx');
+                }
+                if (!obj) {
+                    return;
+                }
+                let f = obj;
                 let reader = new FileReader();
-                let _arr = [];
-                let _obj = {};
-                reader.onload = function(evt) {
-                    console.log(JSON.parse(evt.target.result));
-                    _arr = evt.target.result.split(',');
-                    console.log(_arr);
-                    for (let i = 0, len = _arr.length; i < len; i ++) {
-                        //console.log(_arr[i]);
-                        if (i % 3 === 0) {
-                            _obj.end = _arr[i];
-                            _that.uploadTextValue.push(_obj);
-                        } else {
-                            _obj.domain = _arr[i].domain;
-                            _obj.begin = _arr[i].begin;
-                        }
+                reader.onload = function(event) {
+                    let _data = event.target.result;
+//                    console.log(this.XLSX)
+                    if(_that.rABS) {
+                        _that.completeText = XLSX.read(btoa(_that.fixdata(_data)), {//手动转化
+                            type: 'base64'
+                        });
+                    } else {
+                        _that.completeText = XLSX.read(_data, {
+                            type: 'binary'
+                        });
                     }
+                    //wb.SheetNames[0]是获取Sheets中第一个Sheet的名字
+                    //wb.Sheets[Sheet名]获取第一个Sheet的数据
+                    console.log(JSON.stringify( XLSX.utils.sheet_to_json(_that.completeText.Sheets[_that.completeText.SheetNames[0]]) ));
+//                    console.log(JSON.parse(evt.target.result));
+//                    _arr = evt.target.result.split(',');
+//                    console.log(evt);
+//                    for (let i = 0, len = _arr.length; i < len; i ++) {
+//                        //console.log(_arr[i]);
+//                        if (i % 3 === 0) {
+//                            _obj.end = _arr[i];
+//                            _that.uploadTextValue.push(_obj);
+//                        } else {
+//                            _obj.domain = _arr[i].domain;
+//                            _obj.begin = _arr[i].begin;
+//                        }
+//                    }
                 };
-                reader.readAsText(file.raw);
+                reader.readAsText(obj);
+                console.log();
+            },
+            fixdata (data) {
+                //文件流转BinaryString
+                let o = "",
+                    l = 0,
+                    w = 10240;
+                for(; l < data.byteLength / w; ++l) o += String.fromCharCode.apply(null, new Uint8Array(data.slice(l * w, l * w + w)));
+                o += String.fromCharCode.apply(null, new Uint8Array(data.slice(l * w)));
+                return o;
             },
             submitAll() {
-
+                let _that = this;
+                _that.submitAllStatus = true;
+                _that.$message('正在提交');
+                _that.$http.post('http://172.16.12.7:8080/domain_conf', _that.tableData).then(response => {
+                    _that.$message.success('提交成功');
+                    setTimeout(function() {
+                        _that.submitAllStatus = false;
+                        window.location.reload();
+                    }, 2000);
+                }).catch(error => {
+                    _that.submitAllStatus = false;
+                    _that.$message.success('提交失败');
+                });
             },
             getData() {
                 let _that = this;
                 _that.$http.post('http://172.16.12.7:8080/domain_show').then(response => {
-                    //console.log(response);
                     _that.tableData = response.body;
-//                    if (response.body === null) {
-//                        _that.abnormalStatus = true;
-//                        _that.inputStatus = true;
-//                    } else {
-//                        _that.abnormalStatus = false;
-//                        _that.inputStatus = false;
-//                    }
+                    _that.submitDisabled = _that.tableData.length;
                   _that.$store.commit('loadingActive', false);
                 }).catch(error => {
                     _that.$message.error(error.bodyText);
-//                    _that.abnormalStatus = true;
-//                    _that.inputStatus = true;
-//                    _that.tableData = [];
                 });
             },
             jsonConvertArray(value) {
                 let _arr = JSON.parse(value);
                 return _arr;
+            },
+            getRowIndex(row) {
+                let _arr = this.tableData;
+                for (let i = 0, len = _arr.length; i < len; i ++) {
+                    if (row.domain === _arr[i].domain) {
+                        if (this.contains(this.selectRowIndex, i)) {
+                            this.removeByValue(this.selectRowIndex, i)
+                        } else {
+                            this.selectRowIndex.push(i);
+                        }
+                        break;
+                    }
+                }
+            },
+            removeByValue(arr, val) {
+                for(let i=0; i<arr.length; i++) {
+                    if(arr[i] === val) {
+                        arr.splice(i, 1);
+                        break;
+                    }
+                }
+            },
+            contains(arr, obj) {
+                let i = arr.length;
+                while (i--) {
+                    if (arr[i] === obj) {
+                        return true;
+                    }
+                }
+                return false;
             }
         }
     }
