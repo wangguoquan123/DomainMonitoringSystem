@@ -2,15 +2,15 @@
     <div class="domain-sidebar" :class="navStatus ? 'opened' : 'closed'" :style="{ 'width': navStatus ? '200px' : '60px' }">
         <el-row>
             <el-col>
-                <div class="nav-toggle">
-                    <div class="toggle-main">
-                        <i class="fa fa-gear"></i>
-                        <span class="nav-title-text">功能菜单</span>
-                        <span class="toggleIcon" @click="navToggle">
-                            <i class="fa fa-navicon"></i>
-                        </span>
-                    </div>
-                </div>
+                <!--<div class="nav-toggle">-->
+                    <!--<div class="toggle-main">-->
+                        <!--<i class="fa fa-gear"></i>-->
+                        <!--<span class="nav-title-text">功能菜单</span>-->
+                        <!--<span class="toggleIcon" @click="navToggle">-->
+                            <!--<i class="fa fa-navicon"></i>-->
+                        <!--</span>-->
+                    <!--</div>-->
+                <!--</div>-->
                 <el-menu theme="dark"
                     width="100%"
                     unique-opened
@@ -31,14 +31,21 @@
                             <i class="fa fa-angle-double-right"></i>
                             <span class="nav-text">查询</span>
                         </el-menu-item>
-                        <el-menu-item index="1-3">
-                            <i class="fa fa-angle-double-right"></i>
-                            <span class="nav-text">配置</span>
-                        </el-menu-item>
-                        <el-menu-item index="1-4">
-                            <i class="fa fa-angle-double-right"></i>
-                            <span class="nav-text">告警</span>
-                        </el-menu-item>
+                        <el-submenu index="2">
+                            <template slot="title">
+                                <i class="fa fa-angle-double-right"></i>
+                                <span class="nav-text">配置</span>
+                            </template>
+                            <el-menu-item index="1-3">
+                                <span class="nav-text">localDNS</span>
+                            </el-menu-item>
+                            <el-menu-item index="1-4">
+                                <span class="nav-text">域名</span>
+                            </el-menu-item>
+                            <el-menu-item index="1-5">
+                                <span class="nav-text">告警</span>
+                            </el-menu-item>
+                        </el-submenu>
                     </el-submenu>
                 </el-menu>
             </el-col>
@@ -51,8 +58,9 @@
     const menuMap = {
         '1-1': '/panel/show',
         '1-2': '/panel/query',
-        '1-3': '/panel/configure',
-        '1-4': '/panel/alarm'
+        '1-3': '/panel/localDNS',
+        '1-4': '/panel/configure',
+        '1-5': '/panel/alarm'
     };
 
     export default {
@@ -64,7 +72,7 @@
                 domainBar: {
                     one: ['基础功能'],
                     two: [
-                        ['展示', '查询', '配置', '告警']
+                        ['展示', '查询', 'localDNS', '配置', '告警']
                     ]
                 },
                 navOff: true

@@ -27,6 +27,8 @@ const router = new VueRouter({
     routes
 });
 
+// 路由跳转
+
 Vue.http.interceptors.push(function(request, next) {
 
     // modify method
@@ -39,36 +41,6 @@ Vue.http.interceptors.push(function(request, next) {
     // continue to next interceptor
     next();
 });
-
-router.beforeEach((to, from, next) => {
-    var domainBar = {
-        one: ['基础功能'],
-        two: [
-            ['展示', '查询', '配置', '告警']
-        ]
-    };
-    store.commit('menuActive', menuId[to.fullPath]);
-    window.localStorage.setItem('activeId', store.state.activeId);
-    if (to.fullPath !== '/') {
-        let value = store.state.activeId;
-        let _oneNum = value.split('-')[0];
-        let _twoNum = value.split('-')[1];
-        store.commit('domainBarActive', {
-            one: domainBar.one[_oneNum-1],
-            two: domainBar.two[_oneNum-1][_twoNum-1]
-        });
-    }
-    next();
-});
-
-router.afterEach((to, from, next) => {
-
-});
-
-// 路由跳转
-Vue.prototype.$goRoute = function (index) {
-    this.$router.push(index)
-};
 
 let language = window.localStorage.getItem('x-language');
 if (!language) {
@@ -105,4 +77,34 @@ new Vue({
     menuId,
     template: '<App/>',
     components: { App }
+});
+
+Vue.prototype.$goRoute = function (index) {
+    this.$router.push(index)
+};
+
+router.beforeEach((to, from, next) => {
+    var domainBar = {
+        one: ['基础功能'],
+        two: [
+            ['展示', '查询', 'localDNS', '配置', '告警']
+        ]
+    };
+
+    store.commit('menuActive', menuId[to.fullPath]);
+    window.localStorage.setItem('activeId', store.state.activeId);
+    if (to.fullPath !== '/') {
+        let value = store.state.activeId;
+        let _oneNum = value.split('-')[0];
+        let _twoNum = value.split('-')[1];
+        store.commit('domainBarActive', {
+            one: domainBar.one[_oneNum-1],
+            two: domainBar.two[_oneNum-1][_twoNum-1]
+        });
+    }
+    next();
+});
+
+router.afterEach((to, from, next) => {
+
 });

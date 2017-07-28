@@ -1,109 +1,5 @@
 <template>
     <div class="domain-show" v-loading="domainLoading">
-        <!--<data-tables-->
-            <!--:data="tableData"-->
-            <!--@selection-change="handleSelectionChange"-->
-            <!--@row-click="rowClickChange"-->
-            <!--:has-action-col='false'-->
-            <!--:search-def="searchObj"-->
-            <!--:data-type="getSearchText(lang.locale)"-->
-            <!--:pagination-def='getPaginationDef()'-->
-            <!--:checkbox-filter-def='getCheckFilterDef()'-->
-            <!--stripe-->
-            <!--border-->
-            <!--fit-->
-            <!--style="width: 100%">-->
-            <!--<el-table-column type="selection" width="42"></el-table-column>-->
-            <!--<el-table-column-->
-                <!--prop="Time"-->
-                <!--sortable-->
-                <!--label="时间">-->
-                <!--<template scope="scope">-->
-                    <!--<span>{{ scope.row.Time | convertDate }}</span>-->
-                    <!--&lt;!&ndash;<span ref="statussss">{{ getStatus(scope.row.Status) }}</span>&ndash;&gt;-->
-                <!--</template>-->
-            <!--</el-table-column>-->
-            <!--<el-table-column-->
-                <!--prop="Domain"-->
-                <!--sortable-->
-                <!--label="域名">-->
-            <!--</el-table-column>-->
-            <!--<el-table-column-->
-                <!--prop="LocalDnsAddr"-->
-                <!--sortable-->
-                <!--label="DNS地址">-->
-            <!--</el-table-column>-->
-            <!--<el-table-column-->
-                <!--prop="Ips"-->
-                <!--sortable-->
-                <!--label="IPS">-->
-                <!--<template scope="scope">-->
-                    <!--<ip-show :ipsLength="jsonConvertArray(scope.row.Ips)" v-if="jsonConvertArray(scope.row.Ips)"></ip-show>-->
-                    <!--<span v-else>空</span>-->
-                <!--</template>-->
-            <!--</el-table-column>-->
-            <!--<el-table-column-->
-                <!--prop="FinishCname"-->
-                <!--sortable-->
-                <!--label="CNAME">-->
-                <!--<template scope="scope">-->
-                    <!--<el-tooltip :content="scope.row.FinishCname" placement="top" effect="light">-->
-                        <!--<span class="finish-cname-tooltip">{{ scope.row.FinishCname }}</span>-->
-                    <!--</el-tooltip>-->
-                <!--</template>-->
-            <!--</el-table-column>-->
-            <!--<el-table-column-->
-                <!--prop="CnameList"-->
-                <!--sortable-->
-                <!--label="CNAME_LIST">-->
-                <!--<template scope="scope">-->
-                    <!--<el-tooltip :content="scope.row.CnameList" placement="top" effect="light">-->
-                        <!--<span class="cname-list-tooltip">{{ scope.row.CnameList }}</span>-->
-                    <!--</el-tooltip>-->
-                <!--</template>-->
-            <!--</el-table-column>-->
-            <!--<el-table-column-->
-                <!--prop="Status"-->
-                <!--sortable-->
-                <!--label="Status">-->
-                <!--<template scope="scope">-->
-                    <!--<el-tag-->
-                        <!--:type="scope.row.Status === 0 ? 'success' : 'danger'"-->
-                        <!--ref="statusDom"-->
-                        <!--close-transition>{{ scope.row.Status === 0 ? '正常' : '异常' }}</el-tag>-->
-                <!--</template>-->
-            <!--</el-table-column>-->
-            <!--<el-table-column-->
-                <!--prop="Err"-->
-                <!--sortable-->
-                <!--label="Error">-->
-                <!--<template scope="scope">-->
-                    <!--<div v-if="scope.row.Err.length">-->
-                        <!--<el-tooltip :content="scope.row.Err" placement="top-end" effect="light">-->
-                            <!--<span class="finish-cname-tooltip">{{ scope.row.Err }}</span>-->
-                        <!--</el-tooltip>-->
-                    <!--</div>-->
-                    <!--<div v-else>空</div>-->
-                <!--</template>-->
-            <!--</el-table-column>-->
-        <!--</data-tables>-->
-        <!--<el-dialog-->
-            <!--:title="dialogTitle"-->
-            <!--:visible.sync="authorityDetails"-->
-            <!--size="small"-->
-            <!--class="email-data">-->
-            <!--<div v-loading="authorityLoading" class="main" element-loading-text="拼命加载中">-->
-                <!--<el-col>-->
-                    <!--<table>-->
-
-                    <!--</table>-->
-                <!--</el-col>-->
-                <!--<el-col class="button-group">-->
-                    <!--<el-button type="primary" @click="authorityDetails = false;">关闭</el-button>-->
-                <!--</el-col>-->
-            <!--</div>-->
-        <!--</el-dialog>-->
-
         <div class="show-tool-bar" style="padding-bottom: 30px; overflow: hidden;">
             <div class="left" style="width: 50%; float: left; text-align: left;">
                 <span>筛选：</span>
@@ -117,6 +13,7 @@
             :data="dataGroup()"
             :row-class-name="tableRowClassName"
             :style="{ 'height': tableHeight }"
+            :height="tableHeight"
             :default-sort = "{prop: 'Time', order: 'descending'}"
             @current-change="handleCurrentChange"
             stripe
@@ -185,7 +82,8 @@
             <el-table-column
                 prop="Err"
                 sortable
-                label="Error">
+                label="Error"
+                class="error-message">
                 <template scope="scope">
                     <div v-if="scope.row.Err.length">
                         <el-tooltip :content="scope.row.Err" placement="top-end" effect="light">
@@ -463,6 +361,7 @@
         .finish-cname-tooltip,
         .cname-list-tooltip {
             width: 100%;
+            display: block;
             overflow: hidden;
             white-space: nowrap;
             text-overflow: ellipsis;

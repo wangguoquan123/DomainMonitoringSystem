@@ -3,7 +3,7 @@
         <domain-header></domain-header>
         <domain-sidebar></domain-sidebar>
         <el-row class="contents" :style="{ 'margin-left': slidebarStatic ? '200px' : '60px' }">
-            <el-col :span="24" class="customer_contents" v-loading.body="loading">
+            <el-col :span="24" class="customer_contents" v-loading.body="false">
                 <domain-bar></domain-bar>
                 <router-view></router-view>
             </el-col>
@@ -38,6 +38,14 @@
             },
             loading() {
                 return this.$store.state.loadingStatus;
+            }
+        },
+        mounted() {
+            let _that = this;
+            if (!window.localStorage.activeId) {
+                window.localStorage.setItem('activeId', '1-1');
+                _that.$store.commit('menuActive', '1-1');
+                _that.$router.push('/panel/show');
             }
         }
     }

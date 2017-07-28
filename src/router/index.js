@@ -5,6 +5,7 @@ import domainQuery from '@/components/base/domainQuery';
 import domainConfigure from '@/components/base/domainConfigure';
 import domainShow from '@/components/base/domainShow';
 import domainAlarm from '@/components/base/domainAlarm';
+import domainLocalDNS from '@/components/base/domainLocalDNS';
 
 import Err404 from '@/components/Err404';
 
@@ -41,6 +42,11 @@ let routes = [
                 path: 'alarm',
                 name: 'alarm',
                 component: domainAlarm
+            },
+            {
+                path: 'localDNS',
+                name: 'localDNS',
+                component: domainLocalDNS
             }
         ]
     },

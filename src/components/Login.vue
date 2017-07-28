@@ -113,13 +113,12 @@
                         }
                         _that.$http.post('http://172.16.12.7:8080/login', this.loginForm).then(response => {
                             _that.$message.success(_that.$t('Login successful'));
-                            console.log(response);
                             setTimeout(function() {
                                 _that.$goRoute('/panel/show');
                                 _that.$store.commit('menuActive', '1-1');
                                 window.localStorage.setItem('activeId', '1-1');
                                 if (!window.localStorage.getItem('scrftoken')) {
-                                    window.localStorage.setItem('scrftoken', response.headers.map.token[0]);
+                                    window.localStorage.setItem('scrftoken', response.headers.map.Token[0]);
                                 }
                             }, 2000);
                         }).catch(error => {
