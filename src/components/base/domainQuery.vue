@@ -6,7 +6,8 @@
                 <el-date-picker
                     v-model="dataTimeValue"
                     type="datetimerange"
-                    placeholder="选择时间范围">
+                    placeholder="选择时间范围"
+                    @change="dataTimeChange">
                 </el-date-picker>
             </div>
             <span class="border-style"></span>
@@ -23,6 +24,8 @@
             <el-checkbox v-model="inputGroup.Warnning">异常</el-checkbox>
             <span class="border-style"></span>
             <el-button type="primary" @click="queryData">查询</el-button>
+            <span class="border-style"></span>
+            <el-button type="primary" @click="handleDownload">导出</el-button>
         </div>
         <el-table
             :data="tableData"
@@ -30,6 +33,7 @@
             stripe
             border
             style="width: 100%"
+            height="700"
             v-loading="tableDataLoading"
             element-loading-text="拼命加载中">
             <el-table-column
@@ -41,9 +45,9 @@
                 </template>
             </el-table-column>
             <el-table-column
-                    prop="LocalDns"
-                    label="LocalDns"
-                    sortable>
+                prop="LocalDns"
+                label="LocalDns"
+                sortable>
             </el-table-column>
             <el-table-column
                 prop="Domain"
@@ -59,9 +63,9 @@
                 </template>
             </el-table-column>
             <el-table-column
-                    prop="FinshCname"
-                    label="CName"
-                    sortable>
+                prop="FinshCname"
+                label="CName"
+                sortable>
                 <template scope="scope">
                     <div v-if="scope.row.FinshCname.length">
                         <el-tooltip :content="scope.row.FinshCname" placement="top-end" effect="light">
@@ -72,18 +76,18 @@
                 </template>
             </el-table-column>
             <el-table-column
-                    prop="IPs"
-                    label="IPs"
-                    sortable>
+                prop="IPs"
+                label="IPs"
+                sortable>
                 <template scope="scope">
                     <ip-show :ipsLength="jsonConvertArray(scope.row.IPs)" v-if="jsonConvertArray(scope.row.IPs)"></ip-show>
                     <span v-else>空</span>
                 </template>
             </el-table-column>
             <el-table-column
-                    prop="CnameList"
-                    label="CnameList"
-                    sortable>
+                prop="CnameList"
+                label="CnameList"
+                sortable>
                 <template scope="scope">
                     <div v-if="scope.row.CnameList.length">
                         <el-tooltip :content="scope.row.CnameList" placement="top-end" effect="light">
@@ -229,17 +233,32 @@
                 this.getData(this.getObj());
                 //currentPage 改变时会触发, 当前页currentPage
             },
+            dataTimeChange(value) {
+                if (value === '') {
+                    this.inputGroup.Start = '';
+                    this.inputGroup.End = '';
+                    return false;
+                }
+                let _arr = value.split(' ');
+                let _start = _arr[0] + ' ' + _arr[1].substring(0, _arr[1].length - 3);
+                let _end = _arr[3] + ' ' + _arr[4].substring(0, _arr[4].length - 3);
+                if ((Date.parse(_end) / 1000) < (Date.parse(_start) / 1000)) {
+                    this.$message.error('请设置域名的起始、结束日期段.');
+                    return false;
+                }
+                this.inputGroup.Start = _start;
+                this.inputGroup.End = _end;
+            },
             getData(obj) {
                 let _that = this;
                 _that.tableDataLoading = true;
 
-                _that.$http.post('http://172.16.12.7:8080/search', obj).then(response => {
+                _that.$http.post(this.domainApi.search, obj).then(response => {
                     _that.inputGroup.Count = response.body.Count;
                     _that.tableData = response.body.Record;
-                    console.log(response.body.Record);
                     setTimeout(function() {
                         _that.tableDataLoading = false;
-                    }, 2000);
+                    }, 1000);
                 }).catch(error => {
                     _that.$message.error(error.bodyText);
                     _that.tableData = [];
@@ -300,7 +319,7 @@
             },
             queryData() {
                 let _that = this;
-                if (_that.inputGroup.start === '' || _that.inputGroup.end === '') {
+                if (_that.inputGroup.Start === '' || _that.inputGroup.End === '') {
                     _that.$message.error('您输入的时间范围不允许为空');
                     return false;
                 }
@@ -323,6 +342,36 @@
                 this.inputGroup.Start = this.dateStrContent(this.dataTimeValue[0]);
                 this.inputGroup.End = this.dateStrContent(this.dataTimeValue[1]);
                 return this.inputGroup;
+            },
+            handleDownload() {
+                let _that = this;
+                let _arr = [];
+                let _target = _that.tableData;
+                for (let i = 0, len = _target.length; i < len; i ++) {
+                    _arr.push({
+                        Time: _that.getNowDate(_that.minuteContvert(_target[i].Time)),
+                        LocalDns: _target[i].LocalDns,
+                        Domain: _target[i].Domain,
+                        FinshCname: _target[i].FinshCname,
+                        IPs: _target[i].IPs ? _target[i].IPs : '空',
+                        CnameList: _target[i].CnameList ? _target[i].CnameList : '空',
+                        LocalErr: _target[i].LocalErr ? _target[i].LocalErr : '空',
+                        NsName: _target[i].NsName ? _target[i].NsName : '空',
+                        NsIp: _target[i].NsIp ? _target[i].NsIp : '空',
+                        NsRecord: _target[i].NsRecord ? _target[i].NsRecord : '空',
+                        NsErr: _target[i].NsErr ? _target[i].NsErr : '空'
+                    });
+                }
+                require.ensure([], () => {
+                    const { export_json_to_excel } = require('vendor/Export2Excel');
+                    const tHeader = ['时间', 'LocalDns', '域名', 'CName', 'IPs', 'CnameList', 'LocalErr', 'NsName', 'NsIp', 'NsRecord', 'NsErr'];
+                    const filterVal = ['Time', 'LocalDns', 'Domain', 'FinshCname', 'IPs', 'CnameList', 'LocalErr', 'NsName', 'NsIp', 'NsRecord', 'NsErr'];
+                    const data = _that.formatJson(filterVal, _arr);
+                    export_json_to_excel(tHeader, data, '数据导出表格');
+                })
+            },
+            formatJson(filterVal, jsonData) {
+                return jsonData.map(v => filterVal.map(j => v[j]))
             }
         }
     }

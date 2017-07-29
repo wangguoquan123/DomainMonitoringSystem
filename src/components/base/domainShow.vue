@@ -12,8 +12,7 @@
         <el-table
             :data="dataGroup()"
             :row-class-name="tableRowClassName"
-            :style="{ 'height': tableHeight }"
-            :height="tableHeight"
+            height="820"
             :default-sort = "{prop: 'Time', order: 'descending'}"
             @current-change="handleCurrentChange"
             stripe
@@ -200,6 +199,9 @@
             let _this = this;
             _this.updateHeight();
             window.addEventListener('resize', () => {_this.updateHeight()});
+            if (_this.newData.length) {
+                _that.abnormalStatus = true;
+            }
         },
         computed: {
 
@@ -222,7 +224,7 @@
                 };
                 _that.authorityDetails = true;
                 _that.authorityLoading = true;
-                _that.$http.post('http://172.16.12.7:8080/details', _obj).then(response => {
+                _that.$http.post(this.domainApi.details, _obj).then(response => {
                     _that.detailsData = response.body;
                     _that.authorityLoading = false;
                     _that.dialogTitle = _obj.domain + '(' + row.FinishCname + ')';
@@ -318,8 +320,8 @@
             },
             getData() {
                 let _that = this;
-                _that.$http.post('http://172.16.12.7:8080/display').then(response => {
-                    console.log(response);
+                _that.$http.post(this.domainApi.display).then(response => {
+                    console.log(response.body);
                     _that.tableData = response.body;
                     if (response.body === null) {
                         _that.abnormalStatus = true;
@@ -390,6 +392,9 @@
             .el-input {
                 width: 250px;
             }
+        }
+        .el-dialog__body p {
+            background-color: transparent;
         }
     }
     .tool-bar {

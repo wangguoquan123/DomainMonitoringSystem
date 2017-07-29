@@ -2,9 +2,9 @@
     <div class="domain-bar">
         首页
         <span class="bar-border">/</span>
-        {{ strOff ? newText['one'][num_one] : levelText.one }}
+        {{ domainText.one ? domainText.one : newText['one'][num_one] }}
         <span class="bar-border">/</span>
-        {{ strOff ? newText['two'][num_two] : levelText.two }}
+        {{ domainText.two ? domainText.two : newText['two'][num_two] }}
     </div>
 </template>
 
@@ -18,20 +18,24 @@
                 },
                 newText: {
                     one: ['基础功能'],
-                    two: ['展示', '查询', 'localDNS', '配置', '告警']
+                    two: ['展示', '查询', 'localDNS', '域名', '告警']
                 },
-                strOff: false,
                 num_one: '',
-                num_two: ''
+                num_two: '',
+                strOff: false
             }
         },
         props: [''],
+        computed: {
+            domainText() {
+                return this.$store.state.domainText;
+            }
+        },
         methods: {
 
         },
         mounted() {
             if (window.localStorage.activeId) {
-                this.strOff = true;
                 let _num = window.localStorage.getItem('activeId');
                 this.num_one = Number(_num.split('-')[0]) - 1;
                 this.num_two = Number(_num.split('-')[1]) - 1;

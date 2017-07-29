@@ -18,19 +18,19 @@
             <el-button type="danger" @click="removeSelectData" :disabled="selectRow.length === 0">删除</el-button>
             <el-button type="primary" :disabled="selectRow.length === 0" @click="dialogModifyData = true;">修改</el-button>
             <span class="border-style"></span>
-            <el-button type="info" @click="handleDownload('selectRow')" :disabled="selectRow.length === 0">导出所选</el-button>
-            <el-button type="info" @click="handleDownload">导出全部</el-button>
+            <el-button type="primary" @click="handleDownload('selectRow')" :disabled="selectRow.length === 0">导出所选</el-button>
+            <el-button type="primary" @click="handleDownload">导出全部</el-button>
             <span class="border-style"></span>
             <el-button type="primary" @click="submitAll" :loading="submitAllStatus">提交更改</el-button>
         </div>
         <el-table
             :data="tableData"
-            :style="{ 'height': tableHeight }"
             :default-sort = "{prop: 'Time', order: 'descending'}"
             stripe
             border
             highlight-current-row
             style="width: 100%"
+            height="697"
             @selection-change="handleSelectionChange">
             <el-table-column type="selection" width="42"></el-table-column>
             <el-table-column
@@ -254,6 +254,7 @@
                 let _arr = [];
                 let _off = true;
                 let _newValue = this.value.split('\n');
+                _newValue = Array.from(new Set(_newValue));
                 for (let i = 0, len = _newValue.length; i < len; i ++) {
                     for (let k = 0, len = this.tableData.length; k < len; k ++) {
                         if (_newValue[i] === this.tableData[k].domain) {
@@ -350,7 +351,7 @@
                     cancelButtonText: '取消',
                     type: 'warning'
                 }).then(() => {
-                    for (let i = 0, flag = true, len = this.selectRow.length; i < len; flag ? i ++ : i) {
+                    for (let i = 0, len = this.selectRow.length; i < len; i ++) {
                         for (let j = 0, len = this.tableData.length; j < len; j ++) {
                             if (this.selectRow[i].domain === this.tableData[j].domain) {
                                 this.tableData.splice(j, 1);
@@ -402,7 +403,7 @@
                     const tHeader = ['域名', '起始时间', '终止时间'];
                     const filterVal = ['domain', 'begin', 'end'];
                     const data = _that.formatJson(filterVal, _arr);
-                    export_json_to_excel(tHeader, data, 'table数据');
+                    export_json_to_excel(tHeader, data, '数据导出表格');
                 })
             },
             formatJson(filterVal, jsonData) {
@@ -541,7 +542,7 @@
                 let _that = this;
                 _that.submitAllStatus = true;
                 _that.$message('正在提交');
-                _that.$http.post('http://172.16.12.7:8080/domain_conf', _that.tableData).then(response => {
+                _that.$http.post(this.domainApi.domain_conf, _that.tableData).then(response => {
                     _that.$message.success('提交成功');
                     setTimeout(function() {
                         _that.submitAllStatus = false;
@@ -554,7 +555,7 @@
             },
             getData() {
                 let _that = this;
-                _that.$http.post('http://172.16.12.7:8080/domain_show').then(response => {
+                _that.$http.post(this.domainApi.domain_show).then(response => {
                     _that.tableData = response.body;
                     _that.submitDisabled = _that.tableData.length;
                   _that.$store.commit('loadingActive', false);

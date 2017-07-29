@@ -72,7 +72,7 @@
                 domainBar: {
                     one: ['基础功能'],
                     two: [
-                        ['展示', '查询', 'localDNS', '配置', '告警']
+                        ['展示', '查询', 'localDNS', '域名', '告警']
                     ]
                 },
                 navOff: true
@@ -82,7 +82,7 @@
         methods: {
             updateHeight () {
                 let sideHeight = document.documentElement.clientHeight || document.body.clientHeight;
-                this.side_height = (sideHeight - 92) + 'px';
+                this.side_height = (sideHeight + 92) + 'px';
             },
             selectItem(value) {
                 this.$goRoute(menuMap[value]);
@@ -130,7 +130,7 @@
         float: left;
     }
     .el-menu--dark {
-        min-height: 700px;
+        min-height: 900px;
         background-color: #303642;
     }
     .nav-toggle {

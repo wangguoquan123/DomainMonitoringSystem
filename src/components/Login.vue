@@ -111,7 +111,7 @@
                                 password: _that.loginForm.password
                             }));
                         }
-                        _that.$http.post('http://172.16.12.7:8080/login', this.loginForm).then(response => {
+                        _that.$http.post(this.domainApi.login, this.loginForm).then(response => {
                             _that.$message.success(_that.$t('Login successful'));
                             setTimeout(function() {
                                 _that.$goRoute('/panel/show');

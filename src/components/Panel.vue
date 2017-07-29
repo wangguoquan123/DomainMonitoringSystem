@@ -66,4 +66,7 @@
     .el-pagination__jump {
         margin-right: 10px;
     }
+    .el-message-box__wrapper {
+        z-index: 999999 !important;
+    }
 </style>

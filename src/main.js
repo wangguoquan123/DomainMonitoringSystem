@@ -9,6 +9,7 @@ import routes from '@/router/index.js';
 import VueI18n from 'vue-i18n';
 import i18ns from '@/lib/i18n.js';
 import menuId from '@/lib/menuId.js';
+import domainApi from '@/lib/domain-api.js';
 import verify from 'vue-verify-plugin/src/verify';
 import elementUI from 'element-ui';
 import 'element-ui/lib/theme-default/index.css'
@@ -23,9 +24,15 @@ Vue.use(elementUI);
 Vue.use(DataTables);
 // Vue.use(XLSX);
 
+
 const router = new VueRouter({
     routes
 });
+
+Vue.prototype.$goRoute = function (index) {
+    this.$router.push(index)
+};
+Vue.prototype.domainApi = domainApi;
 
 // 路由跳转
 
@@ -56,7 +63,7 @@ const i18n = new VueI18n({
 Vue.filter('convertDate', function(value) {
     let _old  = new Date(value * 60 * 1000);
     let _year = _old.getFullYear();
-    let _month = _old.getMonth();
+    let _month = _old.getMonth() + 1;
     _month = _month < 10 ? '0' + _month : _month;
     let _date = _old.getDate();
     _date = _date < 10 ? '0' + _date : _date;
@@ -79,29 +86,16 @@ new Vue({
     components: { App }
 });
 
-Vue.prototype.$goRoute = function (index) {
-    this.$router.push(index)
-};
-
 router.beforeEach((to, from, next) => {
     var domainBar = {
         one: ['基础功能'],
         two: [
-            ['展示', '查询', 'localDNS', '配置', '告警']
+            ['展示', '查询', 'localDNS', '域名', '告警']
         ]
     };
 
     store.commit('menuActive', menuId[to.fullPath]);
     window.localStorage.setItem('activeId', store.state.activeId);
-    if (to.fullPath !== '/') {
-        let value = store.state.activeId;
-        let _oneNum = value.split('-')[0];
-        let _twoNum = value.split('-')[1];
-        store.commit('domainBarActive', {
-            one: domainBar.one[_oneNum-1],
-            two: domainBar.two[_oneNum-1][_twoNum-1]
-        });
-    }
     next();
 });
 
