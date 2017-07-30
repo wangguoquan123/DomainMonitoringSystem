@@ -18,6 +18,8 @@
             stripe
             border
             highlight-current-row
+            v-loading="tableLoading"
+            element-loading-text="拼命加载中"
             style="width: 100%">
             <el-table-column
                 prop="Time"
@@ -67,17 +69,6 @@
                     </el-tooltip>
                 </template>
             </el-table-column>
-            <!--<el-table-column-->
-            <!--prop="Status"-->
-            <!--sortable-->
-            <!--label="Status">-->
-            <!--<template scope="scope">-->
-            <!--<el-tag-->
-            <!--:type="scope.row.Status === 0 ? 'success' : 'danger'"-->
-            <!--ref="statusDom"-->
-            <!--close-transition>{{ scope.row.Status === 0 ? '正常' : '异常' }}</el-tag>-->
-            <!--</template>-->
-            <!--</el-table-column>-->
             <el-table-column
                 prop="Err"
                 sortable
@@ -171,7 +162,8 @@
                 tableData: [],
                 filterData: [],
                 newData: [],
-                detailsData: []
+                detailsData: [],
+                tableLoading: false
             }
         },
         props: [],
@@ -320,8 +312,8 @@
             },
             getData() {
                 let _that = this;
+                _that.tableLoading = true;
                 _that.$http.post(this.domainApi.display).then(response => {
-                    console.log(response.body);
                     _that.tableData = response.body;
                     if (response.body === null) {
                         _that.abnormalStatus = true;
@@ -330,6 +322,7 @@
                         _that.abnormalStatus = false;
                         _that.inputStatus = false;
                     }
+                    _that.tableLoading = false;
                     _that.$store.commit('loadingActive', false);
                 }).catch(error => {
                     _that.$message.error(error.bodyText);

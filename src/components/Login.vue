@@ -118,7 +118,7 @@
                                 _that.$store.commit('menuActive', '1-1');
                                 window.localStorage.setItem('activeId', '1-1');
                                 if (!window.localStorage.getItem('scrftoken')) {
-                                    window.localStorage.setItem('scrftoken', response.headers.map.Token[0]);
+                                    window.localStorage.setItem('scrftoken', response.headers.map.token[0]);
                                 }
                             }, 2000);
                         }).catch(error => {

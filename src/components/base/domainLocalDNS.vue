@@ -87,6 +87,12 @@
         props: [],
         mounted() {
             this.lang = this.$i18n;
+            let _csrftoken = window.localStorage.getItem('scrftoken');
+            if (!_csrftoken) {
+                this.$goRoute('/');
+                window.localStorage.setItem('scrftoken', '');
+                return false;
+            }
             if (this.lang.locale === 'en') {
                 locale.use(enLang);
             } else if (this.lang.locale === 'cn') {
