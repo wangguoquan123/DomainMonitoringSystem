@@ -4,6 +4,8 @@
             <div class="left" style="width: 50%; float: left; text-align: left;">
                 <span>筛选：</span>
                 <el-checkbox v-model="filterAbnormal" @change="filterEvent" :disabled="abnormalStatus">异常</el-checkbox>
+                <span class="border-style"></span>
+                <el-button type="primary" @click="handleDownload" :disabled="importDisabled">导出</el-button>
             </div>
             <div class="right" style="width: 50%; float: left; text-align: right;">
                 <el-input v-model="searchInput" placeholder="请输入搜索关键字" @change="filterInput" :disabled="inputStatus"></el-input>
@@ -154,6 +156,7 @@
                 domainLoading: false,
                 abnormalStatus: false,
                 inputStatus: false,
+                importDisabled: false,
                 faChevronDown: 'fa-chevron-down',
                 faChevronUp: 'fa-chevron-up',
                 ipsShow: true,
@@ -283,6 +286,34 @@
                 }
                 return data;
             },
+            handleDownload() {
+                let _that = this;
+                let _arr = [];
+                let _target = null;
+                if (_that.filterData.length) {
+                    _target = _that.filterData;
+                } else if (_that.tableData.length) {
+                    _target = _that.tableData;
+                }
+                for (let i = 0, len = _target.length; i < len; i ++) {
+                    _arr.push({
+                        Time: _that.getNowDate(_that.minuteContvert(_target[i].Time)),
+                        Domain: _target[i].Domain,
+                        LocalDnsAddr: _target[i].LocalDnsAddr,
+                        Ips: _target[i].Ips ? _target[i].Ips : '空',
+                        FinishCname: _target[i].FinishCname,
+                        CnameList: _target[i].CnameList ? _target[i].CnameList : '空',
+                        Err: _target[i].Err ? _target[i].Err : '空'
+                    });
+                }
+                require.ensure([], () => {
+                    const { export_json_to_excel } = require('vendor/Export2Excel');
+                    const tHeader = ['时间', '域名', 'DNS地址', 'IPS', 'CNAME', 'CNAME_LIST', 'Error'];
+                    const filterVal = ['Time', 'Domain', 'LocalDnsAddr', 'Ips', 'FinishCname', 'CnameList', 'Err'];
+                    const data = _that.formatJson(filterVal, _arr);
+                    export_json_to_excel(tHeader, data, '数据导出表格');
+                })
+            },
             updateHeight () {
                 let sideHeight = document.documentElement.clientHeight || document.body.clientHeight;
                 this.tableHeight = (sideHeight - 60) + 'px';
@@ -302,13 +333,39 @@
                     _inputSearch.setAttribute('placeholder', '请输入搜索关键字');
                 }
             },
-            getNowDate() {
-                let _start = parseInt(new Date().getTime() / 1000 / 60) - 10;
-                let _end = parseInt(new Date().getTime() / 1000 / 60);
-                return {
-                    start: _start,
-                    end: _end
+            getNowDate(value) {
+                let totalDate = '';
+                if (value || value === 0) {
+                    totalDate = new Date(value);
+                } else {
+                    totalDate = new Date();
                 }
+
+                let year = totalDate.getFullYear();
+                let month = totalDate.getMonth() + 1;
+                month = month < 10 ? '0' + month : month;
+                let date = totalDate.getDate();
+                date = date < 10 ? '0' + date : date;
+                let hour = totalDate.getHours();
+                hour = hour < 10 ? '0' + hour : hour;
+                let minute = totalDate.getMinutes();
+                minute = minute < 10 ? '0' + minute : minute;
+                let start = year + '-' + month + '-' + (date - 1) + ' ' + hour + ':' + minute;
+                let end = year + '-' + month + '-' + date + ' ' + hour + ':' + minute;
+                if (value || value === 0) {
+                    return end;
+                } else {
+                    return {
+                        start: start,
+                        end: end
+                    };
+                }
+            },
+            minuteContvert(value) {
+                return value * 1000 * 60;
+            },
+            formatJson(filterVal, jsonData) {
+                return jsonData.map(v => filterVal.map(j => v[j]))
             },
             getData() {
                 let _that = this;
@@ -318,9 +375,11 @@
                     if (response.body === null) {
                         _that.abnormalStatus = true;
                         _that.inputStatus = true;
+                        _that.importDisabled = true;
                     } else {
                         _that.abnormalStatus = false;
                         _that.inputStatus = false;
+                        _that.importDisabled = false;
                     }
                     _that.tableLoading = false;
                     _that.$store.commit('loadingActive', false);
@@ -330,13 +389,13 @@
                     _that.inputStatus = true;
                     _that.tableData = [];
                 });
+                if (_that.filterAbnormal) {
+                    _that.filterEvent();
+                }
             },
             jsonConvertArray(value) {
                 let _arr = JSON.parse(value);
                 return _arr;
-            },
-            convertStamp(date) {
-                return date;
             }
         }
     }
@@ -388,6 +447,14 @@
         }
         .el-dialog__body p {
             background-color: transparent;
+        }
+        .border-style {
+            display: inline-block;
+            width: 1px;
+            background-color: #ccc;
+            height: 35px;
+            vertical-align: middle;
+            margin: 0 10px;
         }
     }
     .tool-bar {

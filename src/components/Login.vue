@@ -113,12 +113,13 @@
                         }
                         _that.$http.post(this.domainApi.login, this.loginForm).then(response => {
                             _that.$message.success(_that.$t('Login successful'));
+                            console.log(response.headers.map);
                             setTimeout(function() {
                                 _that.$goRoute('/panel/show');
                                 _that.$store.commit('menuActive', '1-1');
                                 window.localStorage.setItem('activeId', '1-1');
                                 if (!window.localStorage.getItem('scrftoken')) {
-                                    window.localStorage.setItem('scrftoken', response.headers.map.token[0]);
+                                    window.localStorage.setItem('scrftoken', response.headers.map[_that.firstUpperCase('token')][0]);
                                 }
                             }, 2000);
                         }).catch(error => {
@@ -146,6 +147,9 @@
                     this.$store.commit('menuActive', '1-1');
                     window.localStorage.setItem('activeId', '1-1');
                 }
+            },
+            firstUpperCase(str) {
+                return str.toLowerCase().replace(/( |^)[a-z]/g, (L) => L.toUpperCase());
             }
         },
         mounted() {
