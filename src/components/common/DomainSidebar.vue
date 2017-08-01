@@ -152,10 +152,11 @@
             }
         }
     }
-    .el-menu-item, .el-submenu__title {
-        padding: 14px 24px;
-        height: 48px;
-        line-height: 20px;
+    .el-submenu__title {
+        padding: 14px 24px !important;
+        padding-left: 20px !important;
+        height: 48px !important;
+        line-height: 20px !important;
         & > i {
             margin-right: 5px;
         }
@@ -175,7 +176,7 @@
     }
     .el-menu--dark .el-menu-item, .el-menu--dark .el-submenu__title {
         background-color: #303642;
-        color: white;
+        color: white !important;
     }
     .el-menu--dark .el-submenu__title {
         border-bottom: 1px solid #21252d;
