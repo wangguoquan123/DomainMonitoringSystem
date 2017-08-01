@@ -14,7 +14,7 @@
         <el-table
             :data="dataGroup()"
             :row-class-name="tableRowClassName"
-            height="820"
+            height="800"
             :default-sort = "{prop: 'Time', order: 'descending'}"
             @current-change="handleCurrentChange"
             stripe
@@ -296,6 +296,9 @@
                     _target = _that.filterData;
                 } else if (_that.tableData.length) {
                     _target = _that.tableData;
+                } else if (_that.filterData.length === 0 || _that.tableData.length === 0) {
+                    _that.$message.info('暂无数据导出!');
+                    return false;
                 }
                 for (let i = 0, len = _target.length; i < len; i ++) {
                     _arr.push({

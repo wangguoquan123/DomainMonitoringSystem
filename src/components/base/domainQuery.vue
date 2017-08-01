@@ -23,7 +23,7 @@
             <span class="border-style"></span>
             <el-checkbox v-model="inputGroup.Warnning">异常</el-checkbox>
             <span class="border-style"></span>
-            <el-button type="primary" @click="queryData">查询</el-button>
+            <el-button type="primary" @click="queryData" :disabled="queryDisabled">查询</el-button>
             <span class="border-style"></span>
             <el-button type="primary" @click="handleDownload">导出</el-button>
         </div>
@@ -198,6 +198,7 @@
                 },
                 dataTimeValue: [],
                 tableDataLoading: false,
+                queryDisabled: false,
                 pageSizeList: [20, 50, 100, 300, 500]
             }
         },
@@ -249,7 +250,9 @@
                 let _start = _arr[0] + ' ' + _arr[1].substring(0, _arr[1].length - 3);
                 let _end = _arr[3] + ' ' + _arr[4].substring(0, _arr[4].length - 3);
                 if ((Date.parse(_end) / 1000) < (Date.parse(_start) / 1000)) {
-                    this.$message.error('请设置域名的起始、结束日期段.');
+                    this.inputGroup.Start = Date.parse(_start) / 1000;
+                    this.inputGroup.End = Date.parse(_end) / 1000;
+                    this.$message.error('结束日期段不能小于起始时间, 请重新设置.');
                     return false;
                 }
                 this.inputGroup.Start = _start;
@@ -257,6 +260,7 @@
             },
             getData(obj) {
                 let _that = this;
+                _that.queryDisabled = true;
                 _that.tableDataLoading = true;
 
                 _that.$http.post(this.domainApi.search, obj).then(response => {
@@ -264,6 +268,7 @@
                     _that.tableData = response.body.Record;
                     setTimeout(function() {
                         _that.tableDataLoading = false;
+                        _that.queryDisabled = false;
                     }, 1000);
                 }).catch(error => {
                     _that.$message.error(error.bodyText);
@@ -329,6 +334,10 @@
                     _that.$message.error('您输入的时间范围不允许为空');
                     return false;
                 }
+                if (_that.inputGroup.Start > _that.inputGroup.End) {
+                    this.$message.error('结束日期段不能小于起始时间, 请重新设置');
+                    return false;
+                }
                 if (_that.inputGroup.Domain !== '') {
                     if (!_that.domainFormat(_that.inputGroup.Domain)) {
                         _that.$message.error('您输入的域名格式不正确');
@@ -353,6 +362,10 @@
                 let _that = this;
                 let _arr = [];
                 let _target = _that.tableData;
+                if (_target.length === 0) {
+                    _that.$message.info('暂无数据可导出, 请查询后再试!');
+                    return false;
+                }
                 for (let i = 0, len = _target.length; i < len; i ++) {
                     _arr.push({
                         Time: _that.getNowDate(_that.minuteContvert(_target[i].Time)),

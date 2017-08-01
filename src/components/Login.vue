@@ -113,7 +113,7 @@
                         }
                         _that.$http.post(this.domainApi.login, this.loginForm).then(response => {
                             _that.$message.success(_that.$t('Login successful'));
-                            console.log(response.headers.map);
+                            console.log(response);
                             setTimeout(function() {
                                 _that.$goRoute('/panel/show');
                                 _that.$store.commit('menuActive', '1-1');

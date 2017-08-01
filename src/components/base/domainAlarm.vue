@@ -327,8 +327,13 @@
     .domain-alarm {
         padding: 30px;
         p {
-            padding: 0;
             margin: 0;
+            position: relative;
+            background-color: #c3eae9;
+            padding: 6px 20px 6px !important;
+            margin-bottom: 25px;
+            border-radius: 6px;
+            color: #5d5959;
         }
         .el-input {
             width: 73%;

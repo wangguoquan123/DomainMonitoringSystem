@@ -1,6 +1,6 @@
 <template>
     <div class="ips-list">
-        <div v-for='(ipsItem,index) in ipsLength' v-if="isShow ? index < 2 : index">
+        <div v-for='(ipsItem, index) in ipsLength' v-if="isShow ? index + 1 < 3 : index + 1">
             {{ ipsItem }}
         </div>
         <p class="ibagese" @click='ipsToggles' v-if='ipsLength.length>2'><i class="fa" :class='[isShow ? faChevronDown : faChevronUp]'></i></p>

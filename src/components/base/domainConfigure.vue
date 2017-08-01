@@ -17,8 +17,8 @@
             <el-button type="danger" @click="removeSelectData" :disabled="selectRow.length === 0">删除</el-button>
             <el-button type="primary" :disabled="selectRow.length === 0" @click="dialogModifyData = true;">修改</el-button>
             <span class="border-style"></span>
-            <el-button type="primary" @click="handleDownload('selectRow')" :disabled="selectRow.length === 0">导出所选</el-button>
-            <el-button type="primary" @click="handleDownload">导出全部</el-button>
+            <!--<el-button type="primary" @click="handleDownload('selectRow')" :disabled="selectRow.length === 0">导出所选</el-button>-->
+            <el-button type="primary" @click="handleDownload">导出</el-button>
             <span class="border-style"></span>
             <el-button type="primary" @click="submitAll" :loading="submitAllStatus">提交更改</el-button>
         </div>
@@ -74,9 +74,9 @@
                 格式: 每行输入一个域名, 然后回车换行.<br/>
                 注意: 只能包含26个英文字母(a~Z)、数字(0~9)、以及"-"(英文连接号), 不允许出现空格及特殊字符(如！、￥|、%等).
             </p>
-            <div style="margin-bottom: 1em; text-align: center; overflow: hidden;">
+            <div style="margin-bottom: 1em; overflow: hidden;">
                 <div>
-                    <div style="text-align: center; margin-bottom: 10px;">设置起始时间、结束时间</div>
+                    <div style="text-align: center; margin: 0 10px;">设置起始时间、结束时间</div>
                     <el-date-picker
                         v-model="dialogDateTimeValue"
                         type="datetimerange"
