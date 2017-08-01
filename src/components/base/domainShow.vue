@@ -222,6 +222,7 @@
                 _that.authorityLoading = true;
                 _that.$http.post(this.domainApi.details, _obj).then(response => {
                     _that.detailsData = response.body;
+                    console.log(_that.detailsData);
                     _that.authorityLoading = false;
                     _that.dialogTitle = _obj.domain + '(' + row.FinishCname + ')';
                 }).catch(error => {
