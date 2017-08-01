@@ -158,7 +158,7 @@
         height: 48px !important;
         line-height: 20px !important;
     }
-    .el-submenu > .el-submenu__title {
+    .el-menu > .el-submenu > .el-submenu__title {
         padding-left: 20px !important;
     }
     .el-menu-item > i, .el-submenu__title > i {
