@@ -273,6 +273,10 @@
                 }).catch(error => {
                     _that.$message.error(error.bodyText);
                     _that.tableData = [];
+                    setTimeout(function() {
+                        window.localStorage.setItem('scrftoken', '');
+                        _that.$goRoute('/');
+                    }, 2000);
                 });
             },
             getNowDate(value) {

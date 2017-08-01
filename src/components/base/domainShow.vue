@@ -393,6 +393,10 @@
                     _that.abnormalStatus = true;
                     _that.inputStatus = true;
                     _that.tableData = [];
+                    setTimeout(function() {
+                        window.localStorage.setItem('scrftoken', '');
+                        _that.$goRoute('/');
+                    }, 2000);
                 });
                 if (_that.filterAbnormal) {
                     _that.filterEvent();

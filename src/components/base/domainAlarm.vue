@@ -290,6 +290,10 @@
                     }
                 }).catch(error => {
                     _that.$message.error(error.bodyText);
+                    setTimeout(function() {
+                        window.localStorage.setItem('scrftoken', '');
+                        _that.$goRoute('/');
+                    }, 2000);
                 })
             },
             submitAll() {
