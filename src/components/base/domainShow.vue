@@ -114,7 +114,7 @@
                             sortable
                             label="Record">
                             <template scope="scope">
-                                <ip-show :ipsLength="jsonConvertArray(scope.row.NsRecord)" v-if="jsonConvertArray(scope.row.NsRecord)"></ip-show>
+                                <ip-show :ipsLength="jsonConvertArray(scope.row.NsRecord)" v-if="scope.row.NsRecord.length"></ip-show>
                                 <span v-else>空</span>
                             </template>
                         </el-table-column>
