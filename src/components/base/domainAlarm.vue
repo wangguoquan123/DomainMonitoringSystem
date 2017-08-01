@@ -13,9 +13,7 @@
                     height="720"
                     stripe
                     border
-                    style="width: 100%"
-                    v-loading="tableDataLoading"
-                    element-loading-text="拼命加载中">
+                    style="width: 100%">
                 <el-table-column type="selection" width="55"></el-table-column>
                 <el-table-column
                     prop="email"
@@ -88,7 +86,7 @@
                 value: '',
                 buttonStatus: false,
                 tableDataLoading: false,
-                submitDisabled: false,
+                submitDisabled: true,
                 removeLoading: false
             }
         },
@@ -281,7 +279,6 @@
             },
             getData() {
                 let _that = this;
-                _that.tableDataLoading = true;
                 _that.$http.post(this.domainApi.warning_show).then(response => {
                     _that.getArr = response.body;
                     if (_that.getArr.length) {
@@ -291,14 +288,8 @@
                             });
                         }
                     }
-                    setTimeout(function() {
-                        _that.tableDataLoading = false;
-                    }, 1000);
                 }).catch(error => {
                     _that.$message.error(error.bodyText);
-                    setTimeout(function() {
-                        _that.tableDataLoading = false;
-                    }, 1000);
                 })
             },
             submitAll() {
