@@ -175,6 +175,7 @@
         },
         mounted() {
             let _that = this;
+//            console.log(window);
             let _csrftoken = window.localStorage.getItem('scrftoken');
             if (!_csrftoken) {
                 this.$goRoute('/');
