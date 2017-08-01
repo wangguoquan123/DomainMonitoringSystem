@@ -113,18 +113,17 @@
                         }
                         _that.$http.post(this.domainApi.login, this.loginForm).then(response => {
                             _that.$message.success(_that.$t('Login successful'));
-                            console.log(response);
                             setTimeout(function() {
                                 _that.$goRoute('/panel/show');
                                 _that.$store.commit('menuActive', '1-1');
                                 window.localStorage.setItem('activeId', '1-1');
                                 if (!window.localStorage.getItem('scrftoken')) {
-                                    window.localStorage.setItem('scrftoken', response.headers.map[_that.firstUpperCase('token')][0]);
+                                    window.localStorage.setItem('scrftoken', response.body);
                                 }
                             }, 2000);
                         }).catch(error => {
                             _that.loginStatus = false;
-                            _that.$message.error(_that.$t(error.body));
+                            _that.$message.error(_that.$t(error.bodyText));
                         });
                     } else {
                         _that.$message('您输入的用户名或密码错误!');
