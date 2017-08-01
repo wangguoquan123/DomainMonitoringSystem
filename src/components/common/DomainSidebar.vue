@@ -154,12 +154,15 @@
     }
     .el-submenu__title {
         padding: 14px 24px !important;
-        padding-left: 20px !important;
+        padding-left: 40px !important;
         height: 48px !important;
         line-height: 20px !important;
-        & > i {
-            margin-right: 5px;
-        }
+    }
+    .el-submenu > .el-submenu__title {
+        padding-left: 20px !important;
+    }
+    .el-menu-item > i, .el-submenu__title > i {
+        margin-right: 5px !important;
     }
     .toggleIcon {
         position: absolute;
@@ -183,7 +186,7 @@
         border-top: 1px solid #424040;
     }
     .el-submenu.is-active .el-submenu__title {
-        border-bottom: 1px solid #21252d;
+        border-bottom: 1px solid #21252d !important;
     }
     .el-submenu.is-opened {
         .el-menu-item {
