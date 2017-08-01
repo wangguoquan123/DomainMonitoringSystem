@@ -18,12 +18,10 @@
                     :default-active="activeNum"
                     :style="{ height: side_height }"
                     @select="selectItem">
-                    <el-submenu index="1">
+                    <el-submenu index="1" class="first-child">
                         <template slot="title">
-                            <div style="padding-left: 20px !important;">
-                                <i class="fa fa-square"></i>
-                                <span class="nav-title-text">基本功能</span>
-                            </div>
+                            <i class="fa fa-square"></i>
+                            <span class="nav-title-text">基本功能</span>
                         </template>
                         <el-menu-item index="1-1">
                             <i class="fa fa-angle-double-right"></i>
@@ -159,6 +157,9 @@
         padding-left: 40px !important;
         height: 48px !important;
         line-height: 20px !important;
+    }
+    .first-child > div:first-child {
+        padding-left: 20px !important;
     }
     .el-menu-item > i, .el-submenu__title > i {
         margin-right: 5px !important;
