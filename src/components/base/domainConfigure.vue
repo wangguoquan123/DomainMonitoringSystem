@@ -2,18 +2,17 @@
     <div class="domain-configure">
         <div class="button-group" style="padding-bottom: 25px;">
             <el-button type="primary" @click="ShowModel">批量添加</el-button>
-            <span class="border-style"></span>
-            <el-upload
-                class="upload-demo"
-                action="https://jsonplaceholder.typicode.com/posts/"
-                accept="xlsx"
-                :auto-upload="true"
-                :show-file-list="false"
-                :on-change="fileChangeUpload"
-                ref="fileUpload"
-                style="display: inline-block;">
-                <el-button slot="trigger" type="primary">导入Excel</el-button>
-            </el-upload>
+            <!--<el-upload-->
+                <!--class="upload-demo"-->
+                <!--action="https://jsonplaceholder.typicode.com/posts/"-->
+                <!--accept="xlsx"-->
+                <!--:auto-upload="true"-->
+                <!--:show-file-list="false"-->
+                <!--:on-change="fileChangeUpload"-->
+                <!--ref="fileUpload"-->
+                <!--style="display: inline-block;">-->
+                <!--<el-button slot="trigger" type="primary">导入Excel</el-button>-->
+            <!--</el-upload>-->
             <span class="border-style"></span>
             <el-button type="danger" @click="removeSelectData" :disabled="selectRow.length === 0">删除</el-button>
             <el-button type="primary" :disabled="selectRow.length === 0" @click="dialogModifyData = true;">修改</el-button>
@@ -193,10 +192,10 @@
             _this.updateHeight();
             window.addEventListener('resize', () => {_this.updateHeight()});
             let _dateObj = this.getNowDate();
-            _this.dialogDateTimeValue[0] = _dateObj.start;
-            _this.dialogDateTimeValue[1] = _dateObj.end;
-            _this.dialogTimeValue.begin = _dateObj.start;
-            _this.dialogTimeValue.end = _dateObj.end;
+//            _this.dialogDateTimeValue[0] = _dateObj.start;
+//            _this.dialogDateTimeValue[1] = _dateObj.end;
+//            _this.dialogTimeValue.begin = _dateObj.start;
+//            _this.dialogTimeValue.end = _dateObj.end;
             _this.dialogModifyDate[0] = _dateObj.start;
             _this.dialogModifyDate[1] = _dateObj.end;
             _this.modifyData.begin = _dateObj.start;
@@ -630,7 +629,8 @@
             margin-top: 0;
             position: relative;
             background-color: #c3eae9;
-            padding: 6px 20px 6px;
+            padding: 6px 20px 6px !important;
+            margin-bottom: 25px;
             border-radius: 6px;
             color: #5d5959;
             & > i {

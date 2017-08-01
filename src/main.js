@@ -93,7 +93,6 @@ router.beforeEach((to, from, next) => {
             ['展示', '查询', 'localDNS', '域名', '告警']
         ]
     };
-    alert();
     store.commit('menuActive', menuId[to.fullPath]);
     window.localStorage.setItem('activeId', store.state.activeId);
     next();

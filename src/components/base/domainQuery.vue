@@ -218,8 +218,8 @@
             } else if (this.lang.locale === 'cn') {
                 locale.use(zhLang);
             }
-            let _date = this.getNowDate();
-            this.dataTimeValue = [_date.start, _date.end];
+            //let _date = this.getNowDate();
+            //this.dataTimeValue = [_date.start, _date.end];
             this.$store.commit('loadingActive', false);
         },
         methods: {
@@ -433,6 +433,6 @@
         margin: 0 10px;
     }
     .el-date-editor--datetimerange.el-input {
-        width: 320px;
+        width: 320px !important;
     }
 </style>

@@ -284,6 +284,8 @@
         p {
             padding: 0;
             margin: 0;
+            padding: 6px 20px 6px !important;
+            margin-bottom: 25px;
         }
         .el-input {
             width: 73%;
