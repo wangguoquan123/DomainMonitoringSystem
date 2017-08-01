@@ -20,8 +20,10 @@
                     @select="selectItem">
                     <el-submenu index="1">
                         <template slot="title">
-                            <i class="fa fa-square"></i>
-                            <span class="nav-title-text">基本功能</span>
+                            <div style="padding-left: 20px !important;">
+                                <i class="fa fa-square"></i>
+                                <span class="nav-title-text">基本功能</span>
+                            </div>
                         </template>
                         <el-menu-item index="1-1">
                             <i class="fa fa-angle-double-right"></i>
@@ -157,9 +159,6 @@
         padding-left: 40px !important;
         height: 48px !important;
         line-height: 20px !important;
-    }
-    .el-menu > .el-submenu > .el-submenu__title {
-        padding-left: 20px !important;
     }
     .el-menu-item > i, .el-submenu__title > i {
         margin-right: 5px !important;
