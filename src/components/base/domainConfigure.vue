@@ -561,9 +561,11 @@
             getData() {
                 let _that = this;
                 _that.$http.post(this.domainApi.domain_show).then(response => {
-                    _that.tableData = response.body;
-                    _that.submitDisabled = _that.tableData.length;
-                  _that.$store.commit('loadingActive', false);
+                    if (JSON.parse(response.body).length) {
+                        _that.tableData = response.body;
+                        _that.submitDisabled = _that.tableData.length;
+                        _that.$store.commit('loadingActive', false);
+                    }
                 }).catch(error => {
                     _that.$message.error(error.bodyText);
                     setTimeout(function() {
