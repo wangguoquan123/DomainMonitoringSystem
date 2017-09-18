@@ -281,7 +281,7 @@
                 let _that = this;
                 _that.$http.post(this.domainApi.warning_show).then(response => {
                     _that.getArr = response.body;
-                    if (_that.getArr.length) {
+                    if (JSON.parse(_that.getArr).length) {
                         for (let i = 0, len = _that.getArr.length; i < len; i ++) {
                             _that.tableData.unshift({
                                 email: _that.getArr[i]
