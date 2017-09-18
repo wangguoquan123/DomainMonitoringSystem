@@ -561,11 +561,17 @@
             getData() {
                 let _that = this;
                 _that.$http.post(this.domainApi.domain_show).then(response => {
-                    if (JSON.parse(response.body).length) {
+                    if (response.body instanceof Array) {
                         _that.tableData = response.body;
-                        _that.submitDisabled = _that.tableData.length;
-                        _that.$store.commit('loadingActive', false);
+                    } else {
+                        if (JSON.parse(response.body).length) {
+                            _that.tableData = JSON.parse(response.body);
+                        } else {
+                            _that.tableData = '';
+                        }
                     }
+                    _that.submitDisabled = _that.tableData.length;
+                    _that.$store.commit('loadingActive', false);
                 }).catch(error => {
                     _that.$message.error(error.bodyText);
                     setTimeout(function() {

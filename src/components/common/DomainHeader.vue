@@ -34,21 +34,27 @@
                                 </ul>
                             </li>
                             <li class="item-border" style="display: none;"></li>
-                            <li class="item user">
-                                <span class="user-text">
-                                    <span class="user-level">系统超级管理员</span>
-                                    <span class="user-name">您好, 李小白</span>
-                                </span>
-                                <span class="user-pic">
-                                    <img src="http://www.feizl.com/upload2007/2012_01/120115153325811.jpg" alt="头像" />
-                                </span>
-                                <ul class="user-list">
-                                    <li class="user-item" @click="loginOut">
-                                        <i class="fa fa-hand-peace-o"></i>
-                                        登出
-                                    </li>
-                                </ul>
-                            </li>
+                            <!--<li class="item user">-->
+                                <!--<span class="user-text">-->
+                                    <!--<span class="user-level">系统超级管理员</span>-->
+                                    <!--<span class="user-name">您好, 李小白</span>-->
+                                <!--</span>-->
+                                <!--<span class="user-pic">-->
+                                    <!--<img src="http://www.feizl.com/upload2007/2012_01/120115153325811.jpg" alt="头像" />-->
+                                <!--</span>-->
+                                <!--<ul class="user-list">-->
+                                    <!--<li class="user-item" @click="loginOut">-->
+                                        <!--<i class="fa fa-hand-peace-o"></i>-->
+                                        <!--登出-->
+                                    <!--</li>-->
+                                <!--</ul>-->
+                            <!--</li>-->
+                            <div class="user-list" style="margin-right: 15px; cursor: pointer;">
+                                <div class="user-item" @click="loginOut">
+                                    <i class="fa fa-hand-peace-o"></i>
+                                    登出
+                                </div>
+                            </div>
                         </ul>
                     </div>
                 </div>
