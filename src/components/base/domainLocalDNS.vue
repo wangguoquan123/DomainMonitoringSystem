@@ -126,10 +126,8 @@
                         type: 'success',
                         message: '删除成功!'
                     });
-//                    console.log(111111111111, this.tableData, this.getArr);
                     this.tableData.splice(index, 1);
                     this.getArr.splice(index, 1);
-//                    console.log(2222222222, this.tableData, this.getArr);
                     this.submitDisabled = false;
                 }).catch(() => {
                     this.$message({
@@ -171,7 +169,7 @@
                 }
                 if (_off) {
                     for (let j = 0, len = _arr.length; j < len; j ++) {
-                        this.tableData.unshift(_arr[j]);
+                        this.tableData.push(_arr[j]);
                     }
                 }
                 this.dialogAddDNS = false;
@@ -241,7 +239,7 @@
                     }
                     if (_that.getArr.length) {
                         for (let i = 0, len = _that.getArr.length; i < len; i ++) {
-                            _that.tableData.unshift({
+                            _that.tableData.push({
                                 dns: _that.getArr[i]
                             });
                         }
