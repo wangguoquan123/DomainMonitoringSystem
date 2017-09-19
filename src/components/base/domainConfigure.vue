@@ -285,7 +285,7 @@
                 }
                 if (_off) {
                     for (let j = 0, len = _arr.length; j < len; j ++) {
-                        this.tableData.unshift(_arr[j]);
+                        this.tableData.push(_arr[j]);
                     }
                 }
                 this.hideModel();

@@ -177,6 +177,7 @@
                     });
                     this.tableData.splice(index, 1);
                     this.getArr.splice(index, 1);
+                    this.submitDisabled = false;
                 }).catch(() => {
                     this.$message({
                         type: 'info',
@@ -217,7 +218,7 @@
                 }
                 if (_off) {
                     for (let j = 0, len = _arr.length; j < len; j ++) {
-                        this.tableData.unshift(_arr[j]);
+                        this.tableData.push(_arr[j]);
                     }
                 }
                 this.dialogAddEmail = false;
@@ -291,7 +292,7 @@
                     }
                     if (_that.getArr.length) {
                         for (let i = 0, len = _that.getArr.length; i < len; i ++) {
-                            _that.tableData.unshift({
+                            _that.tableData.push({
                                 email: _that.getArr[i]
                             });
                         }
