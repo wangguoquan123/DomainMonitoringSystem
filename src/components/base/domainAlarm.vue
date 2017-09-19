@@ -193,7 +193,6 @@
                 let _off = true;
                 let _newValue = this.value.split('\n');
                 _newValue = Array.from(new Set(_newValue));
-                console.log(typeof this.getArr, this.getArr instanceof Array);
                 for (let i = 0, len = _newValue.length; i < len; i ++) {
                     for (let k = 0, len = this.tableData.length; k < len; k ++) {
                         if (_newValue[i] === this.tableData[k].email) {
