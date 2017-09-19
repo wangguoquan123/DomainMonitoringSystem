@@ -193,6 +193,7 @@
                 let _off = true;
                 let _newValue = this.value.split('\n');
                 _newValue = Array.from(new Set(_newValue));
+                console.log(typeof this.getArr, this.getArr instanceof Array);
                 for (let i = 0, len = _newValue.length; i < len; i ++) {
                     for (let k = 0, len = this.tableData.length; k < len; k ++) {
                         if (_newValue[i] === this.tableData[k].email) {
@@ -224,7 +225,7 @@
                 this.submitDisabled = false;
             },
             verifyEmail(str) {
-                let _reg = /^[a-zA-Z0-9_-]+@[a-zA-Z0-9_-]+(\.[a-zA-Z0-9_-]+)+$/;
+                let _reg = /^[a-z0-9]+([._\\-]*[a-z0-9])*@([a-z0-9]+[-a-z0-9]*[a-z0-9]+.){1,63}[a-z0-9]+$/;
                 return _reg.test(str);
             },
             toTrim(str) {
@@ -280,8 +281,16 @@
             getData() {
                 let _that = this;
                 _that.$http.post(this.domainApi.warning_show).then(response => {
-                    _that.getArr = response.body;
-                    if (JSON.parse(_that.getArr).length) {
+                    if (response.body instanceof Array) {
+                        _that.getArr = response.body;
+                    } else {
+                        if (JSON.parse(response.body).length) {
+                            _that.getArr = JSON.parse(response.body);
+                        } else {
+                            _that.getArr = [];
+                        }
+                    }
+                    if (_that.getArr.length) {
                         for (let i = 0, len = _that.getArr.length; i < len; i ++) {
                             _that.tableData.unshift({
                                 email: _that.getArr[i]
