@@ -126,8 +126,11 @@
                         type: 'success',
                         message: '删除成功!'
                     });
+//                    console.log(111111111111, this.tableData, this.getArr);
                     this.tableData.splice(index, 1);
                     this.getArr.splice(index, 1);
+//                    console.log(2222222222, this.tableData, this.getArr);
+                    this.submitDisabled = false;
                 }).catch(() => {
                     this.$message({
                         type: 'info',
