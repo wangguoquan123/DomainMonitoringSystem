@@ -20,7 +20,7 @@
             <!--<el-button type="primary" @click="handleDownload('selectRow')" :disabled="selectRow.length === 0">导出所选</el-button>-->
             <el-button type="primary" @click="handleDownload">导出</el-button>
             <span class="border-style"></span>
-            <el-button type="primary" @click="submitAll" :loading="submitAllStatus">提交更改</el-button>
+            <el-button type="primary" @click="submitAll" :loading="submitAllStatus" :disabled="submitAllDisabled">提交更改</el-button>
         </div>
         <el-table
             :data="tableData"
@@ -130,6 +130,7 @@
     export default {
         data() {
             return {
+                submitAllDisabled: true,
                 dialogTableVisible: false,
                 dialogModifyData: false,
                 modifySingleData: false,
@@ -485,6 +486,7 @@
                         message: '删除成功!'
                     });
                     this.tableData.splice(index, 1);
+                    this.submitAllDisabled = false;
                 }).catch(() => {
                     this.$message({
                         type: 'info',

@@ -222,7 +222,6 @@
                 _that.authorityLoading = true;
                 _that.$http.post(this.domainApi.details, _obj).then(response => {
                     _that.detailsData = response.body;
-                    console.log(_that.detailsData);
                     _that.authorityLoading = false;
                     _that.dialogTitle = _obj.domain + '(' + row.FinishCname + ')';
                 }).catch(error => {
@@ -267,13 +266,6 @@
                         })
                     })
                 }
-//                if (sortKey) {
-//                    data = data.slice().sort(function (a, b) {
-//                        a = a[sortKey]
-//                        b = b[sortKey]
-//                        return (a === b ? 0 : a > b ? 1 : -1) * order
-//                    })
-//                }
                 this.newData = data;
                 return data;
             },
@@ -376,6 +368,7 @@
                 let _that = this;
                 _that.tableLoading = true;
                 _that.$http.post(this.domainApi.display).then(response => {
+                    _that.tableData = [];
                     _that.tableData = response.body;
                     if (response.body === null) {
                         _that.abnormalStatus = true;
@@ -399,6 +392,7 @@
                     }, 2000);
                 });
                 if (_that.filterAbnormal) {
+                    _that.filterData = [];
                     _that.filterEvent();
                 }
             },
@@ -445,8 +439,12 @@
             }
         }
         .error-style,
-        .el-table--striped .el-table__body tr.el-table__row--striped.error-style td{
+        .el-table--striped .el-table__body tr.el-table__row--striped.error-style td {
             background-color: #f9a288;
+        }
+        .el-table--striped .el-table__body tr.el-table__row--striped.error-style:hover td,
+        .el-table--striped .el-table__body tr.el-table__row.error-style:hover td {
+            background: rgb(238, 241, 246);
         }
         .right {
             text-align: right;
