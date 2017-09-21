@@ -1,6 +1,6 @@
 // const getUrl = 'http://106.2.4.21:8080/';
 // const getUrl = 'http://172.16.12.7:8080/';
-const getUrl = 'http://61.233.41.215:8080/';
+const getUrl = 'http://61.233.41.215:10080/';
 
 export default {
     login: getUrl + 'login',
