@@ -265,7 +265,16 @@
 
                 _that.$http.post(this.domainApi.search, obj).then(response => {
                     _that.inputGroup.Count = response.body.Count;
-                    _that.tableData = response.body.Record;
+                    _that.tableData = [];
+                    if (response.body.Record === '' || response.body.Record === null) {
+                        _that.tableData = [];
+                    } else if (response.body.Record instanceof Array) {
+                        _that.tableData = response.body.Record;
+                    } else {
+                        if (JSON.parse(response.body.Record).length) {
+                            _that.tableData = JSON.parse(response.body.Record);
+                        }
+                    }
                     setTimeout(function() {
                         _that.tableDataLoading = false;
                         _that.queryDisabled = false;

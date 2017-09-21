@@ -281,7 +281,10 @@
             getData() {
                 let _that = this;
                 _that.$http.post(this.domainApi.warning_show).then(response => {
-                    if (response.body instanceof Array) {
+                    _that.getArr = [];
+                    if (response.body === '') {
+                        _that.getArr = [];
+                    } else if (response.body instanceof Array) {
                         _that.getArr = response.body;
                     } else {
                         if (JSON.parse(response.body).length) {

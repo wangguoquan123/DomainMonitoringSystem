@@ -369,12 +369,19 @@
                 _that.tableLoading = true;
                 _that.$http.post(this.domainApi.display).then(response => {
                     _that.tableData = [];
-                    _that.tableData = response.body;
-                    if (response.body === null) {
+                    if (response.body === '' || response.body === null ) {
+                        _that.tableData = [];
                         _that.abnormalStatus = true;
                         _that.inputStatus = true;
                         _that.importDisabled = true;
+                    } else if (response.body instanceof Array) {
+                        _that.tableData = response.body;
                     } else {
+                        if (JSON.parse(response.body).length) {
+                            _that.tableData = JSON.parse(response.body);
+                        }
+                    }
+                    if (response.body !== null) {
                         _that.abnormalStatus = false;
                         _that.inputStatus = false;
                         _that.importDisabled = false;

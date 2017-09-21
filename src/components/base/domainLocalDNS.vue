@@ -232,10 +232,15 @@
             getData() {
                 let _that = this;
                 _that.$http.post(this.domainApi.local_show).then(response => {
-                    if (response.body instanceof Array) {
+                    _that.getArr = [];
+                    if (response.body === '') {
+                        _that.getArr = [];
+                    } else if (response.body instanceof Array) {
                         _that.getArr = response.body;
                     } else {
-                        _that.getArr = JSON.parse(response.body);
+                        if (JSON.parse(response.body).length) {
+                            _that.tableData = JSON.parse(response.body);
+                        }
                     }
                     if (_that.getArr.length) {
                         for (let i = 0, len = _that.getArr.length; i < len; i ++) {

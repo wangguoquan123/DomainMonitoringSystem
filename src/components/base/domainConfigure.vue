@@ -289,6 +289,7 @@
                         this.tableData.push(_arr[j]);
                     }
                 }
+                this.submitAllDisabled = false;
                 this.hideModel();
             },
             toTrim(str) {
@@ -393,6 +394,7 @@
                 this.modifyData.end = _end;
             },
             handleDownload(type) {
+                console.log(type);
                 let _that = this;
                 let _arr = [];
                 let _target = type === 'selectRow' ? _that.selectRow : _that.tableData;
@@ -563,7 +565,10 @@
             getData() {
                 let _that = this;
                 _that.$http.post(this.domainApi.domain_show).then(response => {
-                    if (response.body instanceof Array) {
+                    _that.tableData = [];
+                    if (response.body === '') {
+                        _that.tableData = [];
+                    } else if (response.body instanceof Array) {
                         _that.tableData = response.body;
                     } else {
                         if (JSON.parse(response.body).length) {
