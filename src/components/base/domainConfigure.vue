@@ -372,15 +372,30 @@
                 });
             },
             modifySelectData() {
-                for (let i = 0, len = this.selectRow.length; i < len; i ++) {
-                    for (let k = 0, len = this.tableData.length; k < len; k ++) {
-                        if (this.selectRow[i].domain === this.tableData[k].domain) {
-                            this.tableData[k].begin = this.dateStrContent(this.modifyData.begin);
-                            this.tableData[k].end = this.dateStrContent(this.modifyData.end);
+                // 提交单条修改
+                if (this.modifyData.begin === '' || this.modifyData.end === '') {
+                    this.$message.error('时间范围不允许为空!');
+                    return false;
+                }
+                this.$confirm('此操作新修改的时间将会覆盖旧时间, 是否继续?', '提示', {
+                    confirmButtonText: '确定',
+                    cancelButtonText: '取消',
+                    type: 'warning'
+                }).then(() => {
+                    this.$message.success('修改成功!');
+                    for (let i = 0, len = this.selectRow.length; i < len; i ++) {
+                        for (let k = 0, len = this.tableData.length; k < len; k ++) {
+                            if (this.selectRow[i].domain === this.tableData[k].domain) {
+                                this.tableData[k].begin = this.dateStrContent(this.modifyData.begin);
+                                this.tableData[k].end = this.dateStrContent(this.modifyData.end);
+                            }
                         }
                     }
-                }
-                this.dialogModifyData = false;
+                    this.dialogModifyData = false;
+                    this.submitAllDisabled = false;
+                }).catch(() => {
+                    this.$message.info('已取消修改!');
+                });
             },
             modifyDateChange(value) {
                 let _arr = value.split(' ');
@@ -450,6 +465,7 @@
                     this.tableData[this.modifyIndex].begin = this.dateStrContent(this.modifySingle.begin);
                     this.tableData[this.modifyIndex].end = this.dateStrContent(this.modifySingle.end);
                     this.modifySingleData = false;
+                    this.submitAllDisabled = false;
                 }).catch(() => {
                     this.$message.info('已取消修改!');
                 });
